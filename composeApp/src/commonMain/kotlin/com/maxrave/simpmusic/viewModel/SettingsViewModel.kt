@@ -679,7 +679,6 @@ class SettingsViewModel(
     fun setEnableLiquidGlass(enableLiquidGlass: Boolean) {
         viewModelScope.launch {
             dataStoreManager.setEnableLiquidGlass(enableLiquidGlass)
-            getEnableLiquidGlass()
         }
     }
 

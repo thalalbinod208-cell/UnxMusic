@@ -2,8 +2,8 @@
 
 Unx Music is an Android music app based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic). This repository contains the current Android source and release information. The upstream project and its contributors retain their original copyright and license notices.
 
-- **Current version:** 2.6.26
-- **Application ID:** `com.unx.music`
+- **Current version:** 2.6.27
+- **Application ID:** `com.unx.muice`
 - **Release APK:** see [GitHub Releases](https://github.com/thalalbinod208-cell/UnxMusic/releases)
 - **License:** GPL-3.0-or-later; see [`LICENSE`](LICENSE) and [`UPSTREAM_README.md`](UPSTREAM_README.md).
 - **Third-party licenses:** see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and [`LICENSES/`](LICENSES/).

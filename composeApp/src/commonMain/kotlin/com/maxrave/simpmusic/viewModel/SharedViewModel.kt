@@ -1322,7 +1322,7 @@ class SharedViewModel(
         signingCerts: List<String>,
     ) {
         // This clearly branded personal fork has its own package ID and signing key.
-        if (packageName == "com.unx.music") return
+        if (packageName == "com.unx.muice") return
         if (packageName !in Config.OFFICIAL_PACKAGE_NAMES) {
             _isOfficialBuild.value = false
             return

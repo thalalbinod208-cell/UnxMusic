@@ -173,51 +173,26 @@ actual fun DiscordWebView(
 private fun ManagedWebView(configure: WebView.(onRendererGone: () -> Unit) -> Unit) {
     val appContext = LocalContext.current.applicationContext
     val unavailable = stringResource(Res.string.unavailable)
-    var ready by remember { mutableStateOf(false) }
-    var startupFailed by remember { mutableStateOf(false) }
     var rendererGone by remember { mutableStateOf(false) }
+    val startupState by WebViewProviderStartup.state
 
     LaunchedEffect(Unit) {
-        // startUpWebView runs its tasks on this executor with no try/catch of its own: on a device
-        // without a usable WebView the provider load throws, which would crash the process from an
-        // IO worker. Catch it here instead.
-        val executor =
-            Executor { task ->
-                Dispatchers.IO.asExecutor().execute {
-                    try {
-                        task.run()
-                    } catch (e: Throwable) {
-                        Logger.e("PlatformWebView", "WebView startup threw", e)
-                        startupFailed = true
-                    }
-                }
-            }
-        WebViewCompat.startUpWebView(
-            appContext,
-            WebViewStartUpConfig.Builder(executor).build(),
-            object : WebViewOutcomeReceiver<WebViewStartUpResult, WebViewStartupException> {
-                // Both callbacks arrive on the UI thread.
-                override fun onResult(result: WebViewStartUpResult) {
-                    ready = true
-                }
-
-                // After a reported failure any WebView call may throw or crash natively, so none is made.
-                override fun onError(error: WebViewStartupException) {
-                    Logger.e("PlatformWebView", "WebView startup failed", error)
-                    startupFailed = true
-                }
-            },
-        )
+        WebViewProviderStartup.start(appContext)
     }
 
     when {
-        startupFailed -> {
+        startupState == WebViewProviderState.FAILED -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(unavailable)
+                androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(unavailable)
+                    Button(onClick = { WebViewProviderStartup.retry(appContext) }) {
+                        Text(stringResource(Res.string.retry))
+                    }
+                }
             }
         }
 
-        !ready -> {
+        startupState != WebViewProviderState.READY -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
@@ -268,14 +243,73 @@ private fun webViewOrFallback(
     val webView = runCatching { WebView(context) }.getOrElse { e -> return unavailableView(context, unavailable, e) }
     return runCatching {
         webView.apply {
-            // Keep login pages off WebView's GPU draw path, which can crash the host RenderThread.
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+            // Keep provider auth pages responsive and correctly sized on modern Android devices.
+            // WebView's hardware layer is the platform default; forcing software rendering makes
+            // dynamic Google/Spotify forms flicker and scroll slowly on high-density phones.
+            settings.textZoom = 110
+            settings.useWideViewPort = true
+            settings.loadWithOverviewMode = false
+            settings.setSupportZoom(true)
+            settings.builtInZoomControls = true
+            settings.displayZoomControls = false
+            CookieManager.getInstance().setAcceptCookie(true)
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
             setup()
         }
     }.getOrElse { e ->
         // onRelease only ever sees the fallback view, so a WebView that failed setup is destroyed here.
         runCatching { webView.destroy() }
         unavailableView(context, unavailable, e)
+    }
+}
+
+private enum class WebViewProviderState { IDLE, STARTING, READY, FAILED }
+
+/** Chromium startup is process-wide. Cache the result so switching between login screens does not
+ * recreate the startup spinner and restart WebView initialization on every visit. */
+private object WebViewProviderStartup {
+    val state = mutableStateOf(WebViewProviderState.IDLE)
+    private val lock = Any()
+
+    fun start(context: Context) {
+        synchronized(lock) {
+            if (state.value == WebViewProviderState.STARTING || state.value == WebViewProviderState.READY) return
+            state.value = WebViewProviderState.STARTING
+            val executor = Executor { task ->
+                Dispatchers.IO.asExecutor().execute {
+                    try {
+                        task.run()
+                    } catch (e: Throwable) {
+                        Logger.e("PlatformWebView", "WebView startup threw", e)
+                        state.value = WebViewProviderState.FAILED
+                    }
+                }
+            }
+            try {
+                WebViewCompat.startUpWebView(
+                    context,
+                    WebViewStartUpConfig.Builder(executor).build(),
+                    object : WebViewOutcomeReceiver<WebViewStartUpResult, WebViewStartupException> {
+                        override fun onResult(result: WebViewStartUpResult) {
+                            state.value = WebViewProviderState.READY
+                        }
+
+                        override fun onError(error: WebViewStartupException) {
+                            Logger.e("PlatformWebView", "WebView startup failed", error)
+                            state.value = WebViewProviderState.FAILED
+                        }
+                    },
+                )
+            } catch (e: Throwable) {
+                Logger.e("PlatformWebView", "WebView startup request failed", e)
+                state.value = WebViewProviderState.FAILED
+            }
+        }
+    }
+
+    fun retry(context: Context) {
+        synchronized(lock) { state.value = WebViewProviderState.IDLE }
+        start(context)
     }
 }
 

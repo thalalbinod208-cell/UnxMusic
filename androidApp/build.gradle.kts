@@ -20,7 +20,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.unx.music"
+        applicationId = "com.unx.muice"
         minSdk = 26
         targetSdk = 36
         versionCode =

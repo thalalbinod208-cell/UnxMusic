@@ -197,11 +197,10 @@ fun SpotifyLoginScreen(
                     cookie.takeIf {
                         it.isNotEmpty()
                     }?.let { cookie ->
-                        val cookies =
-                            cookie.split("; ").map {
-                                val (key, value) = it.split("=")
-                                key to value
-                            }
+                        val cookies = cookie.split("; ").mapNotNull { item ->
+                            val separator = item.indexOf('=')
+                            if (separator <= 0) null else item.substring(0, separator) to item.substring(separator + 1)
+                        }
                         viewModel.setFullSpotifyCookies(cookies)
                     }
                     // Some login flows land on the status page with a query string appended

@@ -218,17 +218,18 @@ fun LoginScreen(
                     )
                 }
             } else {
-                // WebView for YouTube Music login, unchanged on Android.
+                // Keep the Google session so the account chooser is stable on return visits.
+                // Clearing the process-wide WebView cookie jar here also logged users out of Spotify.
                 PlatformWebView(
                     state,
                     Config.LOG_IN_URL,
                     aboveContent = {
                         manualLogin()
                     },
-                    clearCookies = true,
                 ) { url ->
                     Logger.d("LogInScreen", "Current URL: $url")
-                    if (url == Config.YOUTUBE_MUSIC_MAIN_URL) {
+                    val completedUrl = url.substringBefore('#').substringBefore('?').trimEnd('/')
+                    if (completedUrl.equals(Config.YOUTUBE_MUSIC_MAIN_URL.trimEnd('/'), ignoreCase = true)) {
                         coroutineScope.launch {
                             val success =
                                 createWebViewCookieManager()
