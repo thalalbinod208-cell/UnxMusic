@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.kyant.backdrop.highlight.Highlight
 import com.materialkolor.hct.Hct
 import com.materialkolor.ktx.toColor
@@ -51,6 +53,8 @@ fun Chip(
     backdrop: PlatformBackdrop? = null,
     // A smaller chip for dense panels such as the Desktop sidebar: 28dp tall with a 12sp label.
     compact: Boolean = false,
+    modifier: Modifier = Modifier,
+    maxLines: Int = 1,
     onClick: () -> Unit,
 ) {
     val glassOn = LocalLiquidGlassEnabled.current
@@ -61,12 +65,13 @@ fun Chip(
             selected = isSelected,
             // The 1dp uniform rim every small glass control here carries: the default rim lights one
             // side only, which on a chip this small does not show at all.
-            modifier = if (glassBackdrop != null) Modifier.liquidGlass(glassBackdrop, highlight = Highlight(width = 1.dp)) else Modifier,
+            modifier = modifier.then(if (glassBackdrop != null) Modifier.liquidGlass(glassBackdrop, highlight = Highlight(width = 1.dp)) else Modifier),
             // outlineVariant, per M3's Aug 2024 chip update: a softer stroke than outline.
             // Glass draws its own rim, so the outline goes.
             borderColor = if (glassBackdrop != null) Color.Transparent else MaterialTheme.colorScheme.outlineVariant,
             onClick = onClick,
             compact = compact,
+            maxLines = maxLines,
         )
     }
 }
@@ -217,6 +222,7 @@ private fun ChipBody(
     containerColor: Color = Color.Transparent,
     labelColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     compact: Boolean = false,
+    maxLines: Int = 1,
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         ElevatedFilterChip(
@@ -241,7 +247,9 @@ private fun ChipBody(
                 // Only the size changes: the chip's own label style still supplies weight and colour.
                 Text(
                     text,
-                    maxLines = 1,
+                    maxLines = maxLines,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = if (maxLines > 1) TextAlign.Center else null,
                     style = if (compact) LocalTextStyle.current.copy(fontSize = 12.sp, lineHeight = 16.sp) else LocalTextStyle.current,
                 )
             },

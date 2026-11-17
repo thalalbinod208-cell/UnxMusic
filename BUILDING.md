@@ -6,33 +6,26 @@ UnX Music uses the Android application ID `com.unx.muice`. The release number an
 
 - JDK 21
 - Android SDK with the platform and build tools required by `compileSdk` in `androidApp/build.gradle.kts`
-- `ANDROID_HOME` pointing to the Android SDK for the signing helper
+- Android SDK available to the build environment
 - Internet access for Gradle dependency resolution
 
 ## Build a FOSS release APK
 
-The repository's local `gradle.properties` defaults `isFullBuild=true`. For a build that does not require private Sentry/Last.fm build configuration, temporarily set it to `isFullBuild=false`, then run:
+The repository's local `gradle.properties` defaults `isFullBuild=true`. For a build that does not require private Sentry/Last.fm build configuration, set it to `isFullBuild=false` in a local, uncommitted change. On a normal Linux development machine, run:
 
 ```sh
 ./gradlew :androidApp:assembleRelease
 ```
 
-The APKs are written under `androidApp/build/outputs/apk/release/`. The release build creates ABI-specific APKs and a universal APK. Do not upload an unsigned local build as an official signed release.
+On Android/Termux, run Gradle through the Android development container (`adev './gradlew :androidApp:assembleRelease --console=plain'`). The APKs are written under `androidApp/build/outputs/apk/release/`. Do not upload an unsigned local build as an official signed release.
 
 ## Build a signed release
 
-Signed builds require a release keystore and credentials owned by the release maintainer. Keep the keystore outside version control and provide the required values through protected environment variables as documented by `./build_and_sign_apk.sh --help`. The release workflow writes its protected keystore to `unx-music-release.jks`; set `KEYSTORE_PATH` for a different local path. The helper prefixes signed APKs with `UnX-Music`; verify the APK application ID, version, signature, and checksum before publishing. Never publish credentials or keystore files.
+Signed builds require the original release keystore and credentials owned by the release maintainer. Keep the keystore outside version control and provide the required values through protected environment variables as documented by `./build_and_sign_apk.sh --help`. Set `KEYSTORE_PATH` to the keystore path. The helper prefixes signed APKs with `UnX-Music`; verify the APK application ID, version, signature, and checksum before publishing. Never publish credentials or keystore files. Without the original keystore, a new APK cannot update an existing installation signed by that key.
 
-## Build validation
+## Build and publish policy
 
-The `Android build validation` workflow checks out the source, selects JDK 21, builds the FOSS release without signing secrets, and uploads the generated APKs as a short-lived workflow artifact. This validates compilation; it does not sign or publish a GitHub release.
-
-## Enable signed GitHub releases
-
-The signed Android Full and FOSS release jobs stay skipped until the repository has signing credentials configured. To enable them, add the Actions repository variable `ENABLE_SIGNED_RELEASES=true` and configure these Actions secrets: `BASE_64_SIGNING_KEY`, `KEY_STORE_PASSWORD`, `ALIAS`, and `KEY_PASSWORD`. The signing key must be base64-encoded from the release maintainer's keystore; never commit the keystore or paste passwords into source files, issues, or logs.
-
-
-After configuring either release channel, run its workflow manually or push a release change and inspect each job before publishing.
+APK builds and signing are performed locally by the maintainer. This repository intentionally has no GitHub Actions APK build or release workflow. Publish a release only after a local build succeeds and its package ID, version, signature, and checksum are verified.
 
 ## Release source of truth
 

@@ -932,7 +932,7 @@ private fun FooterActions(
     Row(
         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = if (onLeave == null) Arrangement.Center else Arrangement.SpaceEvenly,
     ) {
         if (onLeave != null) {
             TextAction(

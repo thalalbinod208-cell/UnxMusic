@@ -115,6 +115,7 @@ fun LoginScreen(
     var devLoginSheet by rememberSaveable {
         mutableStateOf(false)
     }
+    var isCompletingYouTubeLogin by rememberSaveable { mutableStateOf(false) }
 
     val state = rememberWebViewState()
     // Resolve the Desktop-only dependency only on Desktop. Android keeps its existing WebView.
@@ -229,7 +230,8 @@ fun LoginScreen(
                 ) { url ->
                     Logger.d("LogInScreen", "Current URL: $url")
                     val completedUrl = url.substringBefore('#').substringBefore('?').trimEnd('/')
-                    if (completedUrl.equals(Config.YOUTUBE_MUSIC_MAIN_URL.trimEnd('/'), ignoreCase = true)) {
+                    if (completedUrl.equals(Config.YOUTUBE_MUSIC_MAIN_URL.trimEnd('/'), ignoreCase = true) && !isCompletingYouTubeLogin) {
+                        isCompletingYouTubeLogin = true
                         coroutineScope.launch {
                             val success =
                                 createWebViewCookieManager()
@@ -240,12 +242,11 @@ fun LoginScreen(
                                         settingsViewModel.addAccount(it)
                                     } ?: false
 
-                            createWebViewCookieManager().removeAllCookies()
-
                             if (success) {
                                 viewModel.makeToast(getString(Res.string.login_success))
                                 navController.navigateUp()
                             } else {
+                                isCompletingYouTubeLogin = false
                                 viewModel.makeToast(getString(Res.string.login_failed))
                             }
                         }

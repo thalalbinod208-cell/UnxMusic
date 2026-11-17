@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
 import com.maxrave.simpmusic.expect.ui.DesktopMiniPlayerClearance
@@ -680,39 +681,40 @@ private fun EmptyPeriodHeader(
                     top = TOP_STRIP,
                     // Deliberately NOT headerHeight. There is no artwork to fill it, so reserving
                     // 40% of the window for a one-line message left a dead band under the arrows.
-                    bottom = 32.dp,
+                    bottom = 28.dp,
                 ),
         horizontalAlignment = if (isPortrait) Alignment.CenterHorizontally else Alignment.Start,
     ) {
-        Text(
-            // "Play some music" is only the right sentence for someone who has never played
-            // anything. Once they have stepped to another period it is simply false — what they
-            // need to know is that THIS period is empty and the arrows will take them elsewhere.
-            text =
-                stringResource(
-                    if (uiState.periodOffset == 0) {
-                        Res.string.no_data_analytics
-                    } else {
-                        Res.string.analytics_no_data_period
-                    },
-                ),
-            style = typo().bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        if (uiState.periodOffset == 0) {
-            Spacer(Modifier.height(12.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(28.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f))
+                .padding(horizontal = 22.dp, vertical = 24.dp),
+            horizontalAlignment = if (isPortrait) Alignment.CenterHorizontally else Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
             Text(
-                text = stringResource(Res.string.analytics_tracking_hint),
-                style = typo().bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = stringResource(
+                    if (uiState.periodOffset == 0) Res.string.no_data_analytics
+                    else Res.string.analytics_no_data_period,
+                ),
+                style = typo().titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = if (isPortrait) TextAlign.Center else TextAlign.Start,
             )
-            Spacer(Modifier.height(8.dp))
-            OutlinedButton(onClick = onOpenSettings) {
-                Text(stringResource(Res.string.analytics_tracking_settings))
+            if (uiState.periodOffset == 0) {
+                Text(
+                    text = stringResource(Res.string.analytics_tracking_hint),
+                    style = typo().bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = if (isPortrait) TextAlign.Center else TextAlign.Start,
+                )
+                OutlinedButton(onClick = onOpenSettings) {
+                    Text(stringResource(Res.string.analytics_tracking_settings))
+                }
             }
         }
         if (!isPortrait) {
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
             PeriodNavigator(uiState, onStep, 0.dp)
         }
     }

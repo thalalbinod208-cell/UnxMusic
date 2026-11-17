@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -513,46 +514,40 @@ fun LibraryScreen(
                 contentColor = MaterialTheme.colorScheme.onBackground,
             )
         }
-        Row(
-            modifier =
-                Modifier
-                    .horizontalScroll(chipRowState)
-                    .padding(horizontal = 15.dp)
-                    .padding(bottom = 8.dp)
-                    .background(Color.Transparent),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        BoxWithConstraints(
+            Modifier.fillMaxWidth().padding(horizontal = 15.dp).padding(bottom = 8.dp),
         ) {
-            LibraryChipType.entries.forEach { type ->
-                // Mix for you left this row for a tab of its own.
-                if (type == LibraryChipType.YOUTUBE_MIX_FOR_YOU) {
-                    return@forEach
-                }
-                if (type == LibraryChipType.YOUTUBE_MUSIC_PLAYLIST && !loggedIn) {
-                    return@forEach
-                }
-                // Nothing to recap without the plays — gated exactly as the YouTube chip above
-                // is gated on being logged in.
-                if (type == LibraryChipType.WRAPPED && !localTrackingEnabled) {
-                    return@forEach
-                }
-                Chip(
-                    isAnimated = false,
-                    isSelected = type == currentFilter,
-                    text =
-                        when (type) {
-                            LibraryChipType.YOUR_LIBRARY -> stringResource(Res.string.your_library)
-                            LibraryChipType.YOUTUBE_MUSIC_PLAYLIST -> stringResource(Res.string.your_youtube_playlists)
-                            LibraryChipType.YOUTUBE_MIX_FOR_YOU -> stringResource(Res.string.mix_for_you)
-                            LibraryChipType.LOCAL_PLAYLIST -> stringResource(Res.string.your_playlists)
-                            LibraryChipType.FAVORITE_PLAYLIST -> stringResource(Res.string.favorite_playlists)
-                            LibraryChipType.DOWNLOADED_PLAYLIST -> stringResource(Res.string.downloaded_playlists)
-                            LibraryChipType.FAVORITE_PODCAST -> stringResource(Res.string.favorite_podcasts)
-                            LibraryChipType.CHART -> stringResource(Res.string.simpmusic_charts)
-                            LibraryChipType.WRAPPED -> stringResource(Res.string.wrapped)
-                        },
-                    backdrop = chipBackdrop,
-                ) {
-                    viewModel.setCurrentScreen(type)
+            val chipWidth = (maxWidth - 8.dp) / 3
+            Row(
+                modifier = Modifier.horizontalScroll(chipRowState).background(Color.Transparent),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                LibraryChipType.entries.forEach { type ->
+                    // Mix for you left this row for a tab of its own.
+                    if (type == LibraryChipType.YOUTUBE_MIX_FOR_YOU) return@forEach
+                    if (type == LibraryChipType.YOUTUBE_MUSIC_PLAYLIST && !loggedIn) return@forEach
+                    if (type == LibraryChipType.WRAPPED && !localTrackingEnabled) return@forEach
+                    Chip(
+                        isAnimated = false,
+                        isSelected = type == currentFilter,
+                        modifier = Modifier.width(chipWidth).fillMaxWidth(),
+                        maxLines = 2,
+                        text =
+                            when (type) {
+                                LibraryChipType.YOUR_LIBRARY -> stringResource(Res.string.your_library)
+                                LibraryChipType.YOUTUBE_MUSIC_PLAYLIST -> stringResource(Res.string.your_youtube_playlists)
+                                LibraryChipType.YOUTUBE_MIX_FOR_YOU -> stringResource(Res.string.mix_for_you)
+                                LibraryChipType.LOCAL_PLAYLIST -> stringResource(Res.string.your_playlists)
+                                LibraryChipType.FAVORITE_PLAYLIST -> stringResource(Res.string.favorite_playlists)
+                                LibraryChipType.DOWNLOADED_PLAYLIST -> stringResource(Res.string.downloaded_playlists)
+                                LibraryChipType.FAVORITE_PODCAST -> stringResource(Res.string.favorite_podcasts)
+                                LibraryChipType.CHART -> stringResource(Res.string.simpmusic_charts)
+                                LibraryChipType.WRAPPED -> stringResource(Res.string.wrapped)
+                            },
+                        backdrop = chipBackdrop,
+                    ) {
+                        viewModel.setCurrentScreen(type)
+                    }
                 }
             }
         }

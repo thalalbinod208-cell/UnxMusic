@@ -18,7 +18,7 @@
 | Project | Details |
 | --- | --- |
 | App | UnX Music |
-| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · currently **2.6.27** |
+| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.28** |
 | Android application ID | `com.unx.muice` |
 | Android label | `UnX Music` |
 | Current version code | `90` |
@@ -57,13 +57,13 @@ These feature boards are visual references; the [asset library](docs/ASSET_LIBRA
 
 ### [Download the latest APK](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest)
 
-Current release: **2.6.27** · Application ID: `com.unx.muice`
+Current source version: **2.6.28** · Application ID: `com.unx.muice`
 
 </div>
 
 ## Build from source
 
-See [BUILDING.md](BUILDING.md) for the verified Android build setup, FOSS build command, output location, and release-signing notes. Never commit signing keys or local service credentials. GitHub Actions runs a no-secrets APK build validation on pushes and pull requests to `main`.
+See [BUILDING.md](BUILDING.md) for the Android build command, output location, and release-signing requirements. APK builds and signing are performed locally; this repository does not build APKs through GitHub Actions. Never commit signing keys or local service credentials.
 
 ## Contribute and get support
 
