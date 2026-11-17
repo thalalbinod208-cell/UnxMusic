@@ -232,7 +232,6 @@ import simpmusic.composeapp.generated.resources.good_morning
 import simpmusic.composeapp.generated.resources.good_night
 import simpmusic.composeapp.generated.resources.guest
 import simpmusic.composeapp.generated.resources.let_s_pick_a_playlist_for_you
-import simpmusic.composeapp.generated.resources.let_s_start_with_a_radio
 import simpmusic.composeapp.generated.resources.log_in_to_YouTube
 import simpmusic.composeapp.generated.resources.log_in_warning
 import simpmusic.composeapp.generated.resources.mood
@@ -280,6 +279,7 @@ private val homeMoods =
 @ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
+    innerPadding: PaddingValues = PaddingValues(),
     onScrolling: (onTop: Boolean) -> Unit = {},
     viewModel: HomeViewModel =
         koinViewModel(),
@@ -787,6 +787,7 @@ fun HomeScreen(
             if (homeData.isNotEmpty()) {
                 LazyColumn(
                     state = scrollState,
+                    contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     itemsIndexed(homeShelves, key = { index, _ ->
@@ -1444,10 +1445,6 @@ fun QuickPicks(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(Res.string.let_s_start_with_a_radio),
-                    style = typo().bodySmall,
-                )
                 Text(
                     text = stringResource(Res.string.quick_picks),
                     style = typo().headlineMedium,

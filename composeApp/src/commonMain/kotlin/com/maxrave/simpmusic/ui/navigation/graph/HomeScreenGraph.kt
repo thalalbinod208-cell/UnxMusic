@@ -12,7 +12,6 @@ import com.maxrave.simpmusic.ui.navigation.destination.home.ListenTogetherSettin
 import com.maxrave.simpmusic.ui.navigation.destination.home.MoodDestination
 import com.maxrave.simpmusic.ui.navigation.destination.home.NotificationDestination
 import com.maxrave.simpmusic.ui.navigation.destination.home.SettingsDestination
-import com.maxrave.simpmusic.ui.navigation.destination.home.SelfHealConsoleDestination
 import com.maxrave.simpmusic.ui.screen.home.ListenTogetherScreen
 import com.maxrave.simpmusic.ui.screen.home.ListenTogetherSettingsScreen
 import com.maxrave.simpmusic.ui.screen.home.MoodScreen
@@ -20,7 +19,6 @@ import com.maxrave.simpmusic.ui.screen.home.NotificationScreen
 import com.maxrave.simpmusic.ui.screen.home.SettingScreen
 import com.maxrave.simpmusic.ui.screen.other.AppLogScreen
 import com.maxrave.simpmusic.ui.screen.other.CreditScreen
-import com.maxrave.simpmusic.selfheal.ui.SelfHealConsoleScreen
 
 fun NavGraphBuilder.homeScreenGraph(
     innerPadding: PaddingValues,
@@ -67,8 +65,5 @@ fun NavGraphBuilder.homeScreenGraph(
             navController = navController,
             innerPadding = innerPadding,
         )
-    }
-    composable<SelfHealConsoleDestination> {
-        SelfHealConsoleScreen(navController = navController)
     }
 }

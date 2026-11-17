@@ -322,6 +322,7 @@ fun AnalyticsScreen(
                 Modifier
                     .fillMaxSize()
                     .layerBackdrop(headerBackdrop),
+            contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
             // A LazyColumn puts NOTHING between its items. The old screen hid that by giving every
             // section header its own `.padding(top = 12.dp)`; the shared SectionHeader dropped it,
             // and every section went flush against the one above.

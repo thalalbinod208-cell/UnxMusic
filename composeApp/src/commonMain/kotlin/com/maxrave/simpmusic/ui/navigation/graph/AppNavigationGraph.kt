@@ -8,9 +8,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.maxrave.simpmusic.extension.copy
 import com.maxrave.simpmusic.ui.navigation.destination.home.AnalyticsDestination
 import com.maxrave.simpmusic.ui.navigation.destination.home.HomeDestination
 import com.maxrave.simpmusic.ui.navigation.destination.home.WrappedDestination
@@ -58,6 +60,9 @@ fun AppNavigationGraph(
         // Bottom bar destinations
         composable<HomeDestination> {
             HomeScreen(
+                innerPadding = innerPadding.copy(
+                    bottom = innerPadding.calculateBottomPadding() + 16.dp,
+                ),
                 onScrolling = onScrolling,
                 navController = navController,
             )
@@ -87,7 +92,9 @@ fun AppNavigationGraph(
         composable<AnalyticsDestination> {
             AnalyticsScreen(
                 navController = navController,
-                innerPadding = innerPadding,
+                innerPadding = innerPadding.copy(
+                    bottom = innerPadding.calculateBottomPadding() + 16.dp,
+                ),
             )
         }
         // Reached only from the Analytics screen's entry banner, so it inherits that screen's

@@ -1,0 +1,7 @@
+UnX Music 2.6.30 (version code 93)
+
+- Improve bottom content clearance on Home and Analytics so the last item can scroll above the mini player and navigation bar.
+- Center the App Log severity filters and rename the settings issue entry to GitHub issue tracker.
+- Add a direct GitHub issue tracker link in Settings.
+- Default new installations to Light theme while respecting an existing theme choice.
+- Refine Home, Analytics, Library, and Listen Together spacing.

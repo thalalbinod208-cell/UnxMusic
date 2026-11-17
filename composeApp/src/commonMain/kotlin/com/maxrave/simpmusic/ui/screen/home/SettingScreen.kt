@@ -148,7 +148,8 @@ import com.maxrave.simpmusic.ui.icon.Search
 import com.maxrave.simpmusic.ui.icon.Settings
 import com.maxrave.simpmusic.ui.icon.SimpIcons
 import com.maxrave.simpmusic.ui.navigation.destination.home.CreditDestination
-import com.maxrave.simpmusic.ui.navigation.destination.home.SelfHealConsoleDestination
+import com.maxrave.simpmusic.ui.navigation.destination.home.AppLogDestination
+import com.maxrave.simpmusic.expect.openUrl
 import com.maxrave.simpmusic.ui.navigation.destination.login.DiscordLoginDestination
 import com.maxrave.simpmusic.ui.navigation.destination.login.LastfmLoginDestination
 import com.maxrave.simpmusic.ui.navigation.destination.login.LoginDestination
@@ -605,7 +606,7 @@ fun SettingScreen(
     val autoBackupLastTime by viewModel.autoBackupLastTime.collectAsStateWithLifecycle()
     val updateChannel by viewModel.updateChannel.collectAsStateWithLifecycle()
     val enableLiquidGlass by viewModel.enableLiquidGlass.collectAsStateWithLifecycle()
-    val themeMode by sharedViewModel.getThemeMode().collectAsStateWithLifecycle(DataStoreManager.THEME_MODE_DARK)
+    val themeMode by sharedViewModel.getThemeMode().collectAsStateWithLifecycle(DataStoreManager.THEME_MODE_LIGHT)
     val themeColorSource by sharedViewModel.getThemeColorSource().collectAsStateWithLifecycle(DataStoreManager.THEME_COLOR_DEFAULT)
     val customThemeColorHex by sharedViewModel.getCustomThemeColor().collectAsStateWithLifecycle(DataStoreManager.DEFAULT_THEME_COLOR_HEX)
     val nowPlayingStyle by sharedViewModel.getNowPlayingStyle().collectAsStateWithLifecycle(DataStoreManager.NOW_PLAYING_STYLE_SPOTIFY)
@@ -2809,9 +2810,14 @@ fun SettingScreen(
                     },
                 )
                 SettingItem(
-                    title = "Developer · AI Self-Heal Console",
-                    subtitle = "Local diagnostics, GitHub issues, and on-demand AI analysis",
-                    onClick = { navController.navigate(SelfHealConsoleDestination) },
+                    title = "App logs",
+                    subtitle = "Inspect recent app and error logs",
+                    onClick = { navController.navigate(AppLogDestination) },
+                )
+                SettingItem(
+                    title = "GitHub issue tracker",
+                    subtitle = "View reported bugs and feature requests",
+                    onClick = { openUrl("https://github.com/thalalbinod208-cell/UnxMusic/issues") },
                 )
                 SettingItem(
                     title = stringResource(Res.string.auto_check_for_update),

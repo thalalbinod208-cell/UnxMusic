@@ -113,8 +113,6 @@ import simpmusic.composeapp.generated.resources.lt_connect
 import simpmusic.composeapp.generated.resources.lt_connected
 import simpmusic.composeapp.generated.resources.lt_connecting
 import simpmusic.composeapp.generated.resources.lt_create_room
-import simpmusic.composeapp.generated.resources.lt_credit_compatible
-import simpmusic.composeapp.generated.resources.lt_credit_protocol
 import simpmusic.composeapp.generated.resources.lt_disconnect
 import simpmusic.composeapp.generated.resources.lt_display_name
 import simpmusic.composeapp.generated.resources.lt_display_name_hint
@@ -430,33 +428,7 @@ private fun ColumnScope.WorkArea(
         }
     }
 
-    CreditFooter()
     EndOfPage(withoutCredit = true)
-}
-
-/**
- * Where the protocol came from.
- *
- * Left-aligned with everything else: EndOfPage centres its own credit, which reads as misaligned
- * the moment the page stops being a single centred column.
- */
-@Composable
-private fun CreditFooter() {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-    ) {
-        Text(
-            text = stringResource(Res.string.lt_credit_protocol),
-            style = typo().bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            text = stringResource(Res.string.lt_credit_compatible),
-            style = typo().bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
 }
 
 /** Prefix for the share button; the code alone means nothing to the recipient. */

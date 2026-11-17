@@ -207,7 +207,20 @@ private val SECRETS =
         Regex("""(?i)([?&/]ip[=/])[0-9a-f:.]+""") to "$1[redacted]",
     )
 
-private fun redactSecrets(text: String): String = SECRETS.fold(text) { acc, (pattern, replacement) -> pattern.replace(acc, replacement) }
+internal fun redactSecrets(text: String): String = SECRETS.fold(text) { acc, (pattern, replacement) -> pattern.replace(acc, replacement) }
+
+/** Recent sanitized diagnostics for an explicitly submitted support report. */
+internal suspend fun sanitizedLogText(maxChars: Int = 24_000): String = withContext(Dispatchers.IO) {
+    runCatching {
+        buildString {
+            appendLine("UnX Music ${VersionManager.getVersionName()} · ${getPlatform().osName()}")
+            for (name in listOf(Logger.APP_LOG, Logger.ERROR_LOG)) {
+                appendLine("\n===== $name.log =====")
+                Logger.logFiles(name).map(::File).filter(File::exists).forEach { append(it.readText()) }
+            }
+        }.let(::redactSecrets).takeLast(maxChars)
+    }.getOrDefault("Logs were unavailable on this device.")
+}
 
 /** Every log file, oldest first, as one redacted text file handed to [shareImage]. */
 internal suspend fun exportLog(chooserTitle: String): Boolean {
@@ -215,7 +228,7 @@ internal suspend fun exportLog(chooserTitle: String): Boolean {
         withContext(Dispatchers.IO) {
             runCatching {
                 buildString {
-                    appendLine("SimpMusic ${VersionManager.getVersionName()} · ${getPlatform().osName()}")
+                    appendLine("UnX Music ${VersionManager.getVersionName()} · ${getPlatform().osName()}")
                     for (name in listOf(Logger.APP_LOG, Logger.ERROR_LOG)) {
                         appendLine()
                         appendLine("===== $name.log =====")
@@ -226,7 +239,7 @@ internal suspend fun exportLog(chooserTitle: String): Boolean {
         } ?: return false
     val stamp = now()
     val fileName =
-        "simpmusic-log-${stamp.year}${stamp.month.number.pad()}${stamp.day.pad()}-" +
+        "unx-music-log-${stamp.year}${stamp.month.number.pad()}${stamp.day.pad()}-" +
             "${stamp.hour.pad()}${stamp.minute.pad()}${stamp.second.pad()}.txt"
     return shareImage(bytes, fileName, chooserTitle, mimeType = "text/plain")
 }

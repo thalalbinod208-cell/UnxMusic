@@ -21,12 +21,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -249,40 +252,6 @@ fun AppLogScreen(
                         }
                     }
                 },
-                actions = {
-                    // Android Studio's Logcat toolbar, in its order: clear, pause, restart, stick.
-                    RippleIconButton(SimpIcons.Delete, tint = onSurface) {
-                        clearedAt = nowEpochMillis()
-                    }
-                    RippleIconButton(if (paused) SimpIcons.PlayArrow else SimpIcons.Pause, tint = onSurface) {
-                        paused = !paused
-                    }
-                    RippleIconButton(SimpIcons.RestartAlt, tint = onSurface) {
-                        clearedAt = 0L
-                        paused = false
-                        stickToBottom = true
-                        restarts++
-                    }
-                    Box(
-                        Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (stickToBottom) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f) else Color.Transparent,
-                            ),
-                    ) {
-                        RippleIconButton(
-                            SimpIcons.KeyboardDoubleArrowDown,
-                            tint = if (stickToBottom) MaterialTheme.colorScheme.primary else onSurface,
-                        ) {
-                            stickToBottom = !stickToBottom
-                        }
-                    }
-                    RippleIconButton(if (isDesktop) SimpIcons.Download else SimpIcons.Share, tint = onSurface) {
-                        scope.launch {
-                            if (!exportLog(shareTitle)) showToast(exportFailed, ToastGravity.Bottom)
-                        }
-                    }
-                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
             )
             LogTabs(
@@ -290,6 +259,24 @@ fun AppLogScreen(
                 errorCount = errorCount,
                 onSelect = { tab = it },
                 modifier = if (wide) Modifier.padding(start = 20.dp).width(300.dp) else Modifier.fillMaxWidth(),
+            )
+            LogControlStrip(
+                paused = paused,
+                stickToBottom = stickToBottom,
+                onClear = { clearedAt = nowEpochMillis() },
+                onPause = { paused = !paused },
+                onRestart = {
+                    clearedAt = 0L
+                    paused = false
+                    stickToBottom = true
+                    restarts++
+                },
+                onFollow = { stickToBottom = !stickToBottom },
+                onExport = {
+                    scope.launch { if (!exportLog(shareTitle)) showToast(exportFailed, ToastGravity.Bottom) }
+                },
+                isDesktop = isDesktop,
+                modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
             )
             val meta =
                 stringResource(
@@ -310,18 +297,24 @@ fun AppLogScreen(
                     }
                 }
             } else {
+                LogStatusSummary(
+                    live = !paused,
+                    lineCount = shownLines.size,
+                    errorCount = errorCount,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 LogSearchField(query, { query = it }, Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp))
                 if (tab == 0) {
-                    Row(
-                        Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    Box(
+                        Modifier.fillMaxWidth().padding(top = 12.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         LevelChips(minLevel) { minLevel = it }
                     }
-                    MetaText(meta, Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp))
                 }
             }
-            val bottomInset = paddingValues.calculateBottomPadding() + 16.dp
+            // Use the app shell inset once; additional page padding made the tail feel detached.
+            val bottomInset = paddingValues.calculateBottomPadding()
             Box(Modifier.fillMaxWidth().weight(1f)) {
                 when {
                     tab == 0 && shownLines.isEmpty() || tab == 1 && shownErrors.isEmpty() -> {
@@ -386,6 +379,77 @@ fun AppLogScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LogControlStrip(
+    paused: Boolean,
+    stickToBottom: Boolean,
+    onClear: () -> Unit,
+    onPause: () -> Unit,
+    onRestart: () -> Unit,
+    onFollow: () -> Unit,
+    onExport: () -> Unit,
+    isDesktop: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        LogActionPill(SimpIcons.Delete, "Clear", false, onClear)
+        LogActionPill(if (paused) SimpIcons.PlayArrow else SimpIcons.Pause, if (paused) "Resume" else "Pause", paused, onPause)
+        LogActionPill(SimpIcons.RestartAlt, "Restart", false, onRestart)
+        LogActionPill(SimpIcons.KeyboardDoubleArrowDown, if (stickToBottom) "Auto" else "Follow", stickToBottom, onFollow)
+        LogActionPill(if (isDesktop) SimpIcons.Download else SimpIcons.Share, if (isDesktop) "Export" else "Share", false, onExport)
+    }
+}
+
+@Composable
+private fun LogActionPill(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        Modifier
+            .clip(RoundedCornerShape(50))
+            .background(if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 13.dp, vertical = 9.dp),
+        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, contentDescription = null, modifier = Modifier.size(17.dp), tint = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(label, style = MaterialTheme.typography.labelLarge, color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun LogStatusSummary(
+    live: Boolean,
+    lineCount: Int,
+    errorCount: Int,
+    modifier: Modifier = Modifier,
+) {
+    Card(modifier, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(Modifier.size(9.dp).clip(RoundedCornerShape(50)).background(if (live) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline))
+            Column(Modifier.weight(1f)) {
+                Text(if (live) "LIVE CAPTURE" else "CAPTURE PAUSED", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                Text("$lineCount visible lines", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Surface(shape = RoundedCornerShape(50), color = if (errorCount > 0) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHigh) {
+                Text("$errorCount errors", Modifier.padding(horizontal = 11.dp, vertical = 7.dp), style = MaterialTheme.typography.labelMedium, color = if (errorCount > 0) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

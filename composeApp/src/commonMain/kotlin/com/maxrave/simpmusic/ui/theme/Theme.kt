@@ -123,7 +123,7 @@ private fun ColorScheme.withNeutralLightSurfaces(): ColorScheme =
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AppTheme(
-    themeMode: String = DataStoreManager.THEME_MODE_DARK,
+    themeMode: String = DataStoreManager.THEME_MODE_LIGHT,
     themeColorSource: String = DataStoreManager.THEME_COLOR_DEFAULT,
     customThemeColor: Color? = null,
     liquidGlassEnabled: Boolean = true,

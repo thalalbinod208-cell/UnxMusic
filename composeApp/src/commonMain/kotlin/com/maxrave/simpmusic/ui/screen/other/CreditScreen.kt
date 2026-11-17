@@ -168,7 +168,6 @@ fun CreditScreen(
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(24.dp))
     }
 
     VerticalScrollBar(
