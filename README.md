@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/brand/unx-music-app-icon.png" alt="UnX Music app icon" width="92" />
   <h1>UnX Music</h1>
-  <p><strong>An Android music player shaped around the listening experience.</strong></p>
+  <p><strong>UnX Music is an open-source Android music player built with Kotlin and Jetpack Compose.</strong></p>
 
   [![Latest release](https://img.shields.io/github/v/release/thalalbinod208-cell/UnxMusic?display_name=tag&style=for-the-badge&color=167c91)](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest)
   [![License](https://img.shields.io/badge/License-GPL--3.0--or--later-5b7cfa?style=for-the-badge)](LICENSE)
@@ -13,7 +13,7 @@
 
 ---
 
-UnX Music is an Android music app based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic). This repository contains the modified app source, release builds, project documentation, and support links. It is an independent community distribution and is not the upstream SimpMusic project.
+**UnX Music** is an open-source Android music player application. This repository publishes its Kotlin/Jetpack Compose source code, Android APK releases, app screenshots, build instructions, and support information. UnX Music is based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic) and is an independent community distribution, not the upstream SimpMusic project.
 
 | Project | Details |
 | --- | --- |
