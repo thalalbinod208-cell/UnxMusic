@@ -29,9 +29,8 @@ The `Android build validation` workflow checks out the source, selects JDK 21, b
 
 ## Enable signed GitHub releases
 
-The signed Android Full, FOSS, and vivo release jobs stay skipped until the repository has signing credentials configured. To enable them, add the Actions repository variable `ENABLE_SIGNED_RELEASES=true` and configure these Actions secrets: `BASE_64_SIGNING_KEY`, `KEY_STORE_PASSWORD`, `ALIAS`, and `KEY_PASSWORD`. The signing key must be base64-encoded from the release maintainer's keystore; never commit the keystore or paste passwords into source files, issues, or logs.
+The signed Android Full and FOSS release jobs stay skipped until the repository has signing credentials configured. To enable them, add the Actions repository variable `ENABLE_SIGNED_RELEASES=true` and configure these Actions secrets: `BASE_64_SIGNING_KEY`, `KEY_STORE_PASSWORD`, `ALIAS`, and `KEY_PASSWORD`. The signing key must be base64-encoded from the release maintainer's keystore; never commit the keystore or paste passwords into source files, issues, or logs.
 
-Desktop packaging uses Conveyor's separate signing key. It stays skipped until `ENABLE_DESKTOP_RELEASES=true` and the `CONVEYOR_SIGNING_KEY` Actions secret are configured. Android and desktop keys are separate credentials.
 
 After configuring either release channel, run its workflow manually or push a release change and inspect each job before publishing.
 

@@ -19,7 +19,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.build.config) apply false
     alias(libs.plugins.osdetector) apply false
-    alias(libs.plugins.conveyor) apply false
     alias(libs.plugins.compose.hotReload) apply false
 }
 

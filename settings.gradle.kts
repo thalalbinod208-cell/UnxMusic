@@ -34,12 +34,10 @@ val coreDir = File(rootDir, "core")
 val serviceDir = File(rootDir, "core/service")
 val mediaDir = File(rootDir, "core/media")
 
-rootProject.name = "SimpMusic"
+rootProject.name = "UnX Music"
 include(
     ":androidApp",
-    ":vivoAndroidApp",
     ":composeApp",
-    ":desktopApp",
     ":common",
     ":data",
     ":domain",

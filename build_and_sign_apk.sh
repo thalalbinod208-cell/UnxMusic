@@ -6,7 +6,6 @@ set -e
 # Default variables
 BUILD_TYPE="release"
 BUILD_VARIANT="full"
-# --vivo builds vivoAndroidApp: the same app under a package vivo's Origin Island follows
 MODULE="androidApp"
 NAME_SUFFIX=""
 KEYSTORE_PATH="${KEYSTORE_PATH:-./unx-music-release.jks}"
@@ -23,7 +22,6 @@ print_usage() {
   echo "  --debug            Build in debug mode"
   echo "  --full             Build full with Sentry"
   echo "  --foss             Build foss, compatibility with F-Droid, no Sentry"
-  echo "  --vivo             Build the vivo edition (vivoAndroidApp, arm64-v8a only)"
   echo "  -h, --help         Show this help message"
   echo ""
   echo "Environment variables:"
@@ -42,7 +40,6 @@ while [[ "$#" -gt 0 ]]; do
     --foss) BUILD_VARIANT="foss" ;;
     --release) BUILD_TYPE="release" ;;
     --debug) BUILD_TYPE="debug" ;;
-    --vivo) MODULE="vivoAndroidApp"; NAME_SUFFIX="-vivo" ;;
     -h|--help) print_usage ;;
     *) echo "Unknown parameter: $1"; print_usage ;;
   esac

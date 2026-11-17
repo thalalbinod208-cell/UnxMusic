@@ -37,7 +37,7 @@ Online music data and playback rely on third-party services and may change indep
   </tr>
 </table>
 
-Browse the [complete visual asset library](docs/ASSET_LIBRARY.md), including app icon explorations, feature boards, controls, and the supplied module diagram.
+Browse the [complete visual asset library](docs/ASSET_LIBRARY.md), including app icon explorations, feature boards, controls, and the supplied feature and UI reference boards.
 
 ## Feature visuals
 

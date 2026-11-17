@@ -33,9 +33,6 @@ body:
       label: Platform
       options:
         - Android
-        - Desktop (Windows)
-        - Desktop (macOS)
-        - Desktop (Linux)
     validations:
       required: true
 
@@ -54,7 +51,7 @@ body:
     id: version
     attributes:
       label: App Version
-          placeholder: e.g. 2.6.27
+      placeholder: e.g. 2.6.27
     validations:
       required: true
 

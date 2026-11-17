@@ -1,6 +1,6 @@
 # UnX Music visual asset library
 
-This library gathers the app screenshots, logo/icon options, UI feature boards, and module diagram supplied for the UnX Music project. The original attachment files were left untouched; the repository contains copies with descriptive filenames.
+This library gathers the app screenshots, logo/icon options, UI feature boards, supplied for the UnX Music Android project. The original attachment files were left untouched; the repository contains copies with descriptive filenames.
 
 > **Image notes:** The three app screenshots below are captures of the current app. Other feature boards are visual references; some retain SimpMusic branding or upstream artwork. They are kept attributed and do not promise that every pictured concept is present in the current release.
 
@@ -24,7 +24,6 @@ This library gathers the app screenshots, logo/icon options, UI feature boards, 
 <td align="center" width="33%"><img src="../assets/showcase/concepts/equalizer.png" alt="Equalizer settings concept" width="100%"/><br/><strong>Equalizer settings concept</strong></td>
 </tr><tr>
 <td align="center" width="33%"><img src="../assets/showcase/concepts/lyrics-translation.png" alt="Lyrics and translation concept" width="100%"/><br/><strong>Lyrics and translation concept</strong></td>
-<td align="center" width="33%"><img src="../assets/showcase/concepts/desktop-player.png" alt="Desktop player concept" width="100%"/><br/><strong>Desktop player concept</strong></td>
 <td align="center" width="33%"><img src="../assets/showcase/concepts/analytics.png" alt="Listening analytics concept" width="100%"/><br/><strong>Listening analytics concept</strong></td>
 </tr><tr>
 <td align="center" width="33%"><img src="../assets/showcase/concepts/wrapped.png" alt="Yearly listening recap concept" width="100%"/><br/><strong>Yearly listening recap concept</strong></td>
@@ -37,7 +36,6 @@ This library gathers the app screenshots, logo/icon options, UI feature boards, 
 </tr><tr>
 <td align="center" width="33%"><img src="../assets/showcase/concepts/podcasts.png" alt="Podcast concept" width="100%"/><br/><strong>Podcast concept</strong></td>
 <td align="center" width="33%"><img src="../assets/showcase/concepts/notifications.png" alt="Release notifications concept" width="100%"/><br/><strong>Release notifications concept</strong></td>
-<td align="center" width="33%"><img src="../assets/showcase/concepts/desktop-overview.png" alt="Desktop app overview reference" width="100%"/><br/><strong>Desktop app overview reference</strong></td>
 </tr></table>
 
 ## Logo and icon explorations

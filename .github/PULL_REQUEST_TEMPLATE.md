@@ -12,7 +12,7 @@ Closes #
 
 - [ ] This PR addresses an accepted issue (linked above)
 - [ ] I wrote or personally reviewed every line of this change
-- [ ] I tested it on Android and/or Desktop (say which, and how)
+- [ ] I tested it on Android (say which device, and how)
 
 <!--
 AI-assisted work is welcome — a human who understands the change must stand behind
