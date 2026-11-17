@@ -19,7 +19,13 @@ object VersionManager {
     fun getVersionName(): String = removeDevSuffix(versionName ?: String())
 
     /** True when [tag] names a release newer than this build. */
-    fun isBehind(tag: String): Boolean = isNewerRelease(current = getVersionName(), tag = tag)
+    fun isBehind(tag: String, releaseCode: Int? = null): Boolean =
+        isNewerRelease(
+            current = getVersionName(),
+            tag = tag,
+            currentCode = BuildKonfig.versionCode,
+            releaseCode = releaseCode,
+        )
 
     private fun removeDevSuffix(versionName: String): String {
         return if (versionName.endsWith("-dev")) {
@@ -39,9 +45,13 @@ object VersionManager {
 internal fun isNewerRelease(
     current: String,
     tag: String,
+    currentCode: Int = 0,
+    releaseCode: Int? = null,
 ): Boolean {
     val release = tag.trim().removePrefix("v")
-    return release != current && compareVersions(current, release) <= 0
+    val versionComparison = compareVersions(current, release)
+    return versionComparison < 0 ||
+        (versionComparison == 0 && (release != current || (releaseCode != null && releaseCode > currentCode)))
 }
 
 /** Dotted versions compared number by number, so "2.10.0" is newer than "2.9.0". A suffix such as "-hf" is ignored. */

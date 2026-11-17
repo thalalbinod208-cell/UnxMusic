@@ -21,7 +21,7 @@
 | Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.28** |
 | Android application ID | `com.unx.muice` |
 | Android label | `UnX Music` |
-| Current version code | `90` |
+| Current version code | `91` |
 | Main stack | Kotlin · Android · Jetpack Compose · Media3 |
 | Source license | [GPL-3.0-or-later](LICENSE) |
 

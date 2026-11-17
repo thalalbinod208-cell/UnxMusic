@@ -458,6 +458,7 @@ import simpmusic.composeapp.generated.resources.translation_language
 import simpmusic.composeapp.generated.resources.translation_language_message
 import simpmusic.composeapp.generated.resources.unknown
 import simpmusic.composeapp.generated.resources.update_channel
+import simpmusic.composeapp.generated.resources.update_available_for_version
 import simpmusic.composeapp.generated.resources.upload_your_listening_history_to_youtube_music_server_it_will_make_yt_music_recommendation_system_better_working_only_if_logged_in
 import simpmusic.composeapp.generated.resources.use_ai_translation
 import simpmusic.composeapp.generated.resources.use_ai_translation_description
@@ -632,6 +633,7 @@ fun SettingScreen(
     val castState by viewModel.castState.collectAsStateWithLifecycle()
 
     val isCheckingUpdate by sharedViewModel.isCheckingUpdate.collectAsStateWithLifecycle()
+    val latestUpdate by sharedViewModel.updateResponse.collectAsStateWithLifecycle()
 
     val hazeState =
         rememberHazeState()
@@ -640,6 +642,8 @@ fun SettingScreen(
         derivedStateOf {
             if (isCheckingUpdate) {
                 return@derivedStateOf runBlocking { getString(Res.string.checking) }
+            } else if (latestUpdate != null && VersionManager.isBehind(latestUpdate!!.tagName, latestUpdate!!.versionCode)) {
+                return@derivedStateOf runBlocking { getString(Res.string.update_available_for_version, latestUpdate!!.tagName.removePrefix("v")) }
             } else {
                 val lastCheckLong = lastCheckUpdate?.toLong() ?: 0L
                 return@derivedStateOf runBlocking {

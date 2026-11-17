@@ -5,4 +5,5 @@ data class UpdateData(
     val releaseTime: String?,
     val body: String,
     val downloadUrl: String? = null,
+    val versionCode: Int? = null,
 )

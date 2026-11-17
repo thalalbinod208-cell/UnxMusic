@@ -28,6 +28,7 @@ internal class UpdateRepositoryImpl(
                                         ?.filterNotNull()
                                         ?.firstOrNull { it.name?.endsWith(".apk", ignoreCase = true) == true }
                                         ?.browserDownloadUrl,
+                                versionCode = Regex("(?i)version\\s*code\\s*`?([0-9]+)").find(response.body.orEmpty())?.groupValues?.get(1)?.toIntOrNull(),
                             ),
                         ),
                     )
@@ -52,6 +53,7 @@ internal class UpdateRepositoryImpl(
                                     ### Update via F-Droid, changelogs: 
                                     - https://github.com/thalalbinod208-cell/UnxMusic/releases
                                     """.trimIndent(),
+                                versionCode = latestVersion.versionCode,
                             ),
                         ),
                     )
