@@ -326,6 +326,10 @@ fun HomeScreen(
     val openAppTime by sharedViewModel.openAppTime.collectAsStateWithLifecycle()
     val shareLyricsPermissions by sharedViewModel.shareSavedLyrics.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        sharedViewModel.checkForUpdateIfEnabled()
+    }
+
     // Launch banner inputs. App.kt's own dialogs, its Now Playing sheet and whether the user has
     // started using the app come down from App.kt; Home's dialogs are read where the banner is drawn.
     val appDialogOpen = LocalAppDialogOpen.current
@@ -786,10 +790,10 @@ fun HomeScreen(
                     state = scrollState,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    itemsIndexed(homeShelves, key = { index, item ->
-                        // YouTube can repeat the same shelf (same content/hash and thumbnail).
-                        // Include its position so LazyColumn never receives a duplicate key.
-                        "$index-${item.hashCode()}-${mainHomeThumbnail ?: "nothumb"}"
+                    itemsIndexed(homeShelves, key = { index, _ ->
+                        // A shelf's artwork and content can repeat across sections. Position is
+                        // unique within this LazyColumn and does not change when artwork loads.
+                        "home-shelf-$index"
                     }) { index, item ->
                         Box {
                             if (index == 0) {

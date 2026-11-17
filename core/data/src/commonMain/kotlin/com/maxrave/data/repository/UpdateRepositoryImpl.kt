@@ -23,6 +23,11 @@ internal class UpdateRepositoryImpl(
                                 tagName = response.tagName ?: "",
                                 releaseTime = response.publishedAt ?: "",
                                 body = response.body ?: "",
+                                downloadUrl =
+                                    response.assets
+                                        ?.filterNotNull()
+                                        ?.firstOrNull { it.name?.endsWith(".apk", ignoreCase = true) == true }
+                                        ?.browserDownloadUrl,
                             ),
                         ),
                     )
@@ -45,7 +50,7 @@ internal class UpdateRepositoryImpl(
                                 body =
                                     $$"""
                                     ### Update via F-Droid, changelogs: 
-                                    - https://github.com/maxrave-dev/SimpMusic/blob/dev/fastlane/metadata/android/en-US/changelogs/$${latestVersion.versionCode}.txt
+                                    - https://github.com/thalalbinod208-cell/UnxMusic/releases
                                     """.trimIndent(),
                             ),
                         ),

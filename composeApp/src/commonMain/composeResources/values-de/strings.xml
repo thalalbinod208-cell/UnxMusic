@@ -739,7 +739,7 @@
     <string name="audio_output_hdmi">HDMI</string>
     <string name="import_data">Playlists importieren</string>
     <string name="import_playlists_from_other_apps">Playlisten von einer anderen App importieren</string>
-    <string name="import_data_intro">Mit der Importfunktion kannst Du Playlists einlesen, die aus Spotify oder einer anderen YT Music-Client-App konvertiert wurden. Konvertierungstool: https://www.Unx Music.org/tools 
+    <string name="import_data_intro">Mit der Importfunktion kannst Du Playlists einlesen, die aus Spotify oder einer anderen YT Music-Client-App konvertiert wurden. Konvertierungstool: https://github.com/thalalbinod208-cell/UnxMusic/releases
 In Unx Music können nur Playlist-Dateien in unserem eigenen Format importiert werden</string>
     <string name="import_reading_file">Datei wird gelesen…</string>
     <string name="import_progress_songs">%1$d von %2$d Songs</string>

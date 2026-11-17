@@ -27,6 +27,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -113,6 +114,7 @@ import com.maxrave.simpmusic.ui.icon.KeyboardArrowDown
 import com.maxrave.simpmusic.ui.icon.ReceiptLong
 import com.maxrave.simpmusic.ui.icon.SimpIcons
 import com.maxrave.simpmusic.ui.navigation.destination.home.WrappedDestination
+import com.maxrave.simpmusic.ui.navigation.destination.home.SettingsDestination
 import com.maxrave.simpmusic.ui.navigation.destination.library.LibraryDynamicPlaylistDestination
 import com.maxrave.simpmusic.ui.navigation.destination.list.AlbumDestination
 import com.maxrave.simpmusic.ui.navigation.destination.list.ArtistDestination
@@ -141,6 +143,8 @@ import simpmusic.composeapp.generated.resources.lower_plays
 import simpmusic.composeapp.generated.resources.more
 import simpmusic.composeapp.generated.resources.analytics_no_data_period
 import simpmusic.composeapp.generated.resources.no_data_analytics
+import simpmusic.composeapp.generated.resources.analytics_tracking_hint
+import simpmusic.composeapp.generated.resources.analytics_tracking_settings
 import simpmusic.composeapp.generated.resources.songs_played
 import simpmusic.composeapp.generated.resources.this_year
 import simpmusic.composeapp.generated.resources.top_song
@@ -332,6 +336,7 @@ fun AnalyticsScreen(
                         uiState = uiState,
                         isPortrait = isPortrait,
                         onStep = analyticsViewModel::stepPeriod,
+                        onOpenSettings = { navController.navigate(SettingsDestination) },
                         headerHeight = (screenSizeInfo.hDP / 2.5).dp,
                         scrimStartY = (screenSizeInfo.hPX / 2.5f) / 2,
                         scrimColor = pageBackground,
@@ -606,6 +611,7 @@ private fun AnalyticsHeader(
     uiState: AnalyticsUiState,
     isPortrait: Boolean,
     onStep: (Int) -> Unit,
+    onOpenSettings: () -> Unit,
     headerHeight: androidx.compose.ui.unit.Dp,
     scrimStartY: Float,
     // The colour the page itself is painted with. The scrim has to dissolve into THIS rather than
@@ -624,7 +630,12 @@ private fun AnalyticsHeader(
             }
 
         topTrack == null ->
-            EmptyPeriodHeader(uiState, isPortrait, onStep)
+            EmptyPeriodHeader(
+                uiState = uiState,
+                isPortrait = isPortrait,
+                onStep = onStep,
+                onOpenSettings = onOpenSettings,
+            )
 
         isPortrait ->
             PortraitHeader(topTrack, headerHeight, scrimStartY, scrimColor, onBitmap)
@@ -647,6 +658,7 @@ private fun EmptyPeriodHeader(
     uiState: AnalyticsUiState,
     isPortrait: Boolean,
     onStep: (Int) -> Unit,
+    onOpenSettings: () -> Unit,
 ) {
     Column(
         modifier =
@@ -687,6 +699,18 @@ private fun EmptyPeriodHeader(
             style = typo().bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
+        if (uiState.periodOffset == 0) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = stringResource(Res.string.analytics_tracking_hint),
+                style = typo().bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedButton(onClick = onOpenSettings) {
+                Text(stringResource(Res.string.analytics_tracking_settings))
+            }
+        }
         if (!isPortrait) {
             Spacer(Modifier.height(20.dp))
             PeriodNavigator(uiState, onStep, 0.dp)

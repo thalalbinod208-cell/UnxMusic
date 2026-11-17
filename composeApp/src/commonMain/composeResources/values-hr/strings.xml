@@ -695,7 +695,7 @@
     <string name="not_available_while_casting">Nije dostupno while casting</string>
     <string name="import_data">Import playlists</string>
     <string name="import_playlists_from_other_apps">Import playlists from another app</string>
-    <string name="import_data_intro">Import brings in playlists converted from Spotify or another YT Music client app.\nConverting tool: https://www.Unx Music.org/tools\nIn Unx Music, only playlist files in our own format can be imported</string>
+    <string name="import_data_intro">Import brings in playlists converted from Spotify or another YT Music client app.\nConverting tool: https://github.com/thalalbinod208-cell/UnxMusic/releases\nIn Unx Music, only playlist files in our own format can be imported</string>
     <string name="import_reading_file">Reading file…</string>
     <string name="import_progress_songs">%1$d of %2$d songs</string>
     <string name="import_result">Stvorid %1$d playlists and imported %2$d songs.</string>

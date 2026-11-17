@@ -748,6 +748,8 @@
     <string name="your_top_tracks">Your top tracks</string>
     <string name="date_range">Date range</string>
     <string name="no_data_analytics">Please play some music to see analytics</string>
+    <string name="analytics_tracking_hint">Listening history is stored on this device. Turn on local tracking in Settings to build analytics as you listen.</string>
+    <string name="analytics_tracking_settings">Open listening history settings</string>
     <string name="rate_translated_lyrics">Rate translation</string>
     <string name="rate_lyrics">Rate lyrics</string>
     <string name="vote_for_lyrics">Vote for lyrics</string>
@@ -787,7 +789,7 @@
     <string name="audio_output_hdmi">HDMI</string>
     <string name="import_data">Import playlists</string>
     <string name="import_playlists_from_other_apps">Import playlists from another app</string>
-    <string name="import_data_intro">Import brings in playlists converted from Spotify or another YT Music client app.\nConverting tool: https://www.Unx Music.org/tools\nIn Unx Music, only playlist files in our own format can be imported</string>
+    <string name="import_data_intro">Import brings in playlists converted from Spotify or another YT Music client app.\nConverting tool: https://github.com/thalalbinod208-cell/UnxMusic/releases\nIn Unx Music, only playlist files in our own format can be imported</string>
     <string name="import_reading_file">Reading file…</string>
     <string name="import_progress_songs">%1$d of %2$d songs</string>
     <string name="import_result">Created %1$d playlists and imported %2$d songs.</string>

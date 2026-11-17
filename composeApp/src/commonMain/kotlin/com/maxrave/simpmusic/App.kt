@@ -941,7 +941,7 @@ fun App(
                                 onClick = {
                                     shouldShowUpdateDialog = false
                                     viewModel.showedUpdateDialog = false
-                                    openUrl("https://simpmusic.org/download")
+                                    openUrl(response.downloadUrl ?: "https://github.com/thalalbinod208-cell/UnxMusic/releases/latest")
                                 },
                             ) {
                                 Text(

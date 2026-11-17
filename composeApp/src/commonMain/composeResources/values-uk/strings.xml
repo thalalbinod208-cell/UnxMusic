@@ -724,7 +724,7 @@
     <string name="audio_output_hdmi">HDMI</string>
     <string name="import_data">Імпорт плейлиста</string>
     <string name="import_playlists_from_other_apps">Імпортувати плейлісти з іншого додатка</string>
-    <string name="import_data_intro">Функція імпорту дозволяє завантажувати плейлисти, конвертовані з Spotify або іншого клієнтського додатка YT Music.\nІнструмент для конвертації: https://www.Unx Music.org/tools\nУ Unx Music можна імпортувати лише файли плейлистів у нашому власному форматі</string>
+    <string name="import_data_intro">Функція імпорту дозволяє завантажувати плейлисти, конвертовані з Spotify або іншого клієнтського додатка YT Music.\nІнструмент для конвертації: https://github.com/thalalbinod208-cell/UnxMusic/releases\nУ Unx Music можна імпортувати лише файли плейлистів у нашому власному форматі</string>
     <string name="import_reading_file">Читання файлу…</string>
     <string name="import_progress_songs">%1$d з %2$d пісень</string>
     <string name="import_result">Створено %1$d плейлистів і імпортовано %2$d пісні.</string>

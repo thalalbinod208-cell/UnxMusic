@@ -745,7 +745,7 @@ Unx Music תמיד בחינם וללא פרסומות \n\nנבנה ב-❤️ מ�
     <string name="audio_output_hdmi">HDMI</string>
     <string name="import_data">יבא פלייליסטים</string>
     <string name="import_playlists_from_other_apps">יבא פלייליסטים מאפליקציה אחרת</string>
-    <string name="import_data_intro">ייבוא מביא פלייליסטים שהומרו מ-Spotify או מאפליקציית לקוח אחרת של YouTube Music.\nכלי המרה: https://www.Unx Music.org/tools\nב-Unx Music, ניתן לייבא רק קבצי פלייליסט בפורמט שלנו</string>
+    <string name="import_data_intro">ייבוא מביא פלייליסטים שהומרו מ-Spotify או מאפליקציית לקוח אחרת של YouTube Music.\nכלי המרה: https://github.com/thalalbinod208-cell/UnxMusic/releases\nב-Unx Music, ניתן לייבא רק קבצי פלייליסט בפורמט שלנו</string>
     <string name="import_reading_file">קורא קובץ…</string>
     <string name="import_progress_songs">%1$d מתוך %2$d שירים</string>
     <string name="import_result">נוצרו %1$d פלייליסטים ויובאו %2$d שירים.</string>

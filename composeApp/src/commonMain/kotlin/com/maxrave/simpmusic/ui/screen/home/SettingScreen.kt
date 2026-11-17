@@ -2645,18 +2645,18 @@ fun SettingScreen(
             SettingGroup(
                 title = stringResource(Res.string.backup),
                 footer = {
-                    val beforeUrl = stringResource(Res.string.import_data_intro).substringBefore("https://www.simpmusic.org/tools")
-                    val afterUrl = stringResource(Res.string.import_data_intro).substringAfter("https://www.simpmusic.org/tools")
+                    val beforeUrl = stringResource(Res.string.import_data_intro).substringBefore("https://github.com/thalalbinod208-cell/UnxMusic/releases")
+                    val afterUrl = stringResource(Res.string.import_data_intro).substringAfter("https://github.com/thalalbinod208-cell/UnxMusic/releases")
                     Text(
                         buildAnnotatedString {
                             append(beforeUrl)
                             withLink(
                                 LinkAnnotation.Url(
-                                    "https://www.simpmusic.org/tools",
+                                    "https://github.com/thalalbinod208-cell/UnxMusic/releases",
                                     TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary)),
                                 ),
                             ) {
-                                append("https://www.simpmusic.org/tools")
+                                append("https://github.com/thalalbinod208-cell/UnxMusic/releases")
                             }
                             append(afterUrl)
                         },

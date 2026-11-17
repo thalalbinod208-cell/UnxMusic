@@ -737,7 +737,7 @@
     <string name="audio_output_hdmi">HDMI</string>
     <string name="import_data">Nhập danh sách phát</string>
     <string name="import_playlists_from_other_apps">Nhập danh sách phát từ ứng dụng khác</string>
-    <string name="import_data_intro">Tính năng nhập sẽ thêm các danh sách phát đã chuyển đổi từ Spotify hoặc một ứng dụng YT Music khác.\nCông cụ chuyển đổi: https://www.Unx Music.org/tools\nUnx Music chỉ nhập được tệp danh sách phát theo định dạng riêng của Unx Music</string>
+    <string name="import_data_intro">Tính năng nhập sẽ thêm các danh sách phát đã chuyển đổi từ Spotify hoặc một ứng dụng YT Music khác.\nCông cụ chuyển đổi: https://github.com/thalalbinod208-cell/UnxMusic/releases\nUnx Music chỉ nhập được tệp danh sách phát theo định dạng riêng của Unx Music</string>
     <string name="import_reading_file">Đang đọc tệp…</string>
     <string name="import_progress_songs">%1$d / %2$d bài hát</string>
     <string name="import_result">Đã tạo %1$d danh sách phát và nhập %2$d bài hát.</string>

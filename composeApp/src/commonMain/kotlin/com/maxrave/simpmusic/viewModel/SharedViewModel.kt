@@ -154,6 +154,7 @@ class SharedViewModel(
     var isFirstMiniplayer: Boolean = false
     var isFirstSuggestions: Boolean = false
     var showedUpdateDialog: Boolean = false
+    private var checkedForUpdateThisSession: Boolean = false
 
     private val appIdentity: AppIdentity by inject()
 
@@ -1305,6 +1306,13 @@ class SharedViewModel(
         }
     }
 
+    /** Run the configured update check once per app process when automatic checks are enabled. */
+    fun checkForUpdateIfEnabled() {
+        if (checkedForUpdateThisSession) return
+        checkedForUpdateThisSession = true
+        if (shouldCheckForUpdate()) checkForUpdate()
+    }
+
     /**
      * [signingCerts]: SHA-256 hex of each certificate this APK is signed with. A failed fetch leaves
      * the app usable — it plays offline, and an unknown answer must not lock out our own users.
@@ -1314,7 +1322,7 @@ class SharedViewModel(
         signingCerts: List<String>,
     ) {
         // This clearly branded personal fork has its own package ID and signing key.
-        if (packageName == "com.unx.muice") return
+        if (packageName == "com.unx.music") return
         if (packageName !in Config.OFFICIAL_PACKAGE_NAMES) {
             _isOfficialBuild.value = false
             return

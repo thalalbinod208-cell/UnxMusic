@@ -716,7 +716,7 @@
     <string name="audio_output_hdmi">HDMI裝置</string>
     <string name="import_data">匯入播放清單</string>
     <string name="import_playlists_from_other_apps">從其他軟體匯入播放清單</string>
-    <string name="import_data_intro">匯入功能可將Spotify或其他YouTube音樂用戶端套用轉換後的播放清單匯入Unx Music。 \n轉換工具：https://www.Unx Music.org/tools\nUnx Music僅支援匯入我們自身格式的播放清單檔案</string>
+    <string name="import_data_intro">匯入功能可將Spotify或其他YouTube音樂用戶端套用轉換後的播放清單匯入Unx Music。 \n轉換工具：https://github.com/thalalbinod208-cell/UnxMusic/releases\nUnx Music僅支援匯入我們自身格式的播放清單檔案</string>
     <string name="import_reading_file">正在讀取檔案…</string>
     <string name="import_progress_songs">%1$d 首/%2$d 首</string>
     <string name="import_result">創建了 %1$d 個播放列表，並匯入了 %2$d 首歌曲。</string>
