@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import simpmusic.composeapp.generated.resources.Res
 import simpmusic.composeapp.generated.resources.music_video
 import simpmusic.composeapp.generated.resources.new_release
+import simpmusic.composeapp.generated.resources.quick_picks
 import simpmusic.composeapp.generated.resources.song
 import simpmusic.composeapp.generated.resources.view_count
 
@@ -224,7 +225,18 @@ class HomeViewModel(
                         when (home) {
                             is Resource.Success -> {
                                 _continuation.value = home.data?.first
-                                _homeItemList.value = home.data?.second ?: emptyList()
+                                val freshItems = home.data?.second.orEmpty()
+                                // YouTube sometimes omits Quick picks from an authenticated feed or
+                                // a refresh response. Keep the last usable radio shelf so signing
+                                // in or pulling to refresh cannot make that Home section vanish.
+                                val quickPicksTitle = getString(Res.string.quick_picks)
+                                val previousQuickPicks = _homeItemList.value.firstOrNull { it.title == quickPicksTitle }
+                                _homeItemList.value =
+                                    if (params == null && previousQuickPicks != null && freshItems.none { it.title == quickPicksTitle }) {
+                                        freshItems + previousQuickPicks
+                                    } else {
+                                        freshItems
+                                    }
                                 _homeBackground.value = home.data?.third
                                 _homeListState.value = ListState.IDLE
                                 loading.value = false
@@ -253,7 +265,15 @@ class HomeViewModel(
                     when (home) {
                         is Resource.Success -> {
                             _continuation.value = home.data?.first
-                            _homeItemList.value = home.data?.second ?: listOf()
+                            val freshItems = home.data?.second.orEmpty()
+                            val quickPicksTitle = getString(Res.string.quick_picks)
+                            val previousQuickPicks = _homeItemList.value.firstOrNull { it.title == quickPicksTitle }
+                            _homeItemList.value =
+                                if (params == null && previousQuickPicks != null && freshItems.none { it.title == quickPicksTitle }) {
+                                    freshItems + previousQuickPicks
+                                } else {
+                                    freshItems
+                                }
                             _homeBackground.value = home.data?.third
                         }
 

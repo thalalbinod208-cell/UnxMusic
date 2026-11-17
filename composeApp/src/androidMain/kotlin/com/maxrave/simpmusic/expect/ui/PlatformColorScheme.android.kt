@@ -1,6 +1,7 @@
 package com.maxrave.simpmusic.expect.ui
 
 import android.os.Build
+import android.graphics.Color
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -27,6 +28,12 @@ actual fun SystemBarAppearanceEffect(isDark: Boolean) {
     if (!view.isInEditMode) {
         SideEffect {
             val window = context.getActivityOrNull()?.window ?: return@SideEffect
+            window.statusBarColor = Color.TRANSPARENT
+            window.navigationBarColor = Color.TRANSPARENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                window.isStatusBarContrastEnforced = false
+                window.isNavigationBarContrastEnforced = false
+            }
             val controller = WindowCompat.getInsetsController(window, view)
             // Light theme → dark icons; dark theme → light icons.
             controller.isAppearanceLightStatusBars = !isDark

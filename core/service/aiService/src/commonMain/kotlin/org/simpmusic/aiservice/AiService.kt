@@ -15,6 +15,8 @@ import com.maxrave.domain.data.model.metadata.Lyrics
 import com.maxrave.domain.data.model.taste.TasteException
 import com.maxrave.domain.data.model.taste.TasteInput
 import com.maxrave.domain.data.model.taste.TasteReading
+import com.maxrave.domain.selfheal.BugSolution
+import com.maxrave.domain.selfheal.BugSolutionParser
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
@@ -108,6 +110,23 @@ class AiService(
                 ?: throw TasteException(TasteException.Kind.TEMPORARY, message = "Empty response from AI")
         return parseTasteReading(raw)
             ?: throw TasteException(TasteException.Kind.TEMPORARY, message = "Unreadable response from AI")
+    }
+
+    /** Called only after a developer explicitly requests analysis for a selected ticket. */
+    suspend fun solveBug(prompt: String): BugSolution {
+        val request = chatCompletionRequest {
+            this.model = this@AiService.model
+            responseFormat = ChatResponseFormat.jsonSchema(bugSolutionSchema)
+            messages {
+                system {
+                    content = "Analyze the supplied UnX Music Android diagnostic report. Return only the requested structured fields. Do not invent certainty: say when evidence is insufficient. Never request or reproduce credentials, cookies, tokens, or private user data. Kotlin patches are suggestions and must be reviewed before applying."
+                }
+                user { content { text(prompt.take(24_000)) } }
+            }
+        }
+        val raw = openAI.chatCompletion(request).choices.firstOrNull()?.message?.content
+            ?: throw IllegalStateException("Empty response from AI")
+        return BugSolutionParser.parse(raw)
     }
 
     suspend fun translateLyrics(
@@ -240,6 +259,27 @@ class AiService(
                 schema = translationJsonSchema,
                 strict = false,
             )
+
+        private val bugSolutionSchema = JsonSchema(
+            name = "unx_bug_solution",
+            schema = buildJsonObject {
+                put("type", "object")
+                putJsonObject("properties") {
+                    putJsonObject("rootCause") { put("type", "string") }
+                    putJsonObject("suspectedFiles") {
+                        put("type", "array")
+                        putJsonObject("items") { put("type", "string") }
+                    }
+                    putJsonObject("stepByStepFix") { put("type", "string") }
+                    putJsonObject("kotlinPatch") { put("type", "string") }
+                    putJsonObject("recommendedSelfHealRule") { put("type", "string") }
+                }
+                putJsonArray("required") {
+                    add("rootCause"); add("suspectedFiles"); add("stepByStepFix"); add("kotlinPatch"); add("recommendedSelfHealRule")
+                }
+            },
+            strict = false,
+        )
     }
 }
 

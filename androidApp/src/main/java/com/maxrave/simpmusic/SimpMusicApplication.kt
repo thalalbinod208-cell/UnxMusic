@@ -21,6 +21,10 @@ import com.maxrave.common.AppIdentity
 import com.maxrave.data.di.loader.loadAllModules
 import com.maxrave.domain.manager.DataStoreManager
 import com.maxrave.domain.repository.LibrarySyncPhoneRepository
+import com.maxrave.domain.data.entities.BugTicketEntity
+import com.maxrave.domain.repository.SelfHealRepository
+import com.maxrave.domain.selfheal.ErrorFingerprintGenerator
+import com.maxrave.domain.selfheal.SelfHealEventBus
 import com.maxrave.logger.Logger
 import com.maxrave.simpmusic.di.viewModelModule
 import com.maxrave.simpmusic.service.backup.AutoBackupScheduler
@@ -46,6 +50,7 @@ import org.simpmusic.discord.configDiscord
 import org.simpmusic.lastfm.configLastfm
 import java.io.File
 import java.lang.reflect.Field
+import kotlin.time.Clock
 
 class SimpMusicApplication :
     Application(),
@@ -76,6 +81,49 @@ class SimpMusicApplication :
                 ),
             )
             loadKoinModules(viewModelModule)
+        }
+        val selfHealRepository: SelfHealRepository = get()
+        applicationScope.launch(Dispatchers.IO) {
+            runCatching {
+                val pending = File(filesDir, "pending_unx_crash.txt")
+                if (pending.exists()) {
+                    val trace = pending.readText().take(48_000)
+                    val now = Clock.System.now().toEpochMilliseconds()
+                    val hash = ErrorFingerprintGenerator.generate("UNCAUGHT_CRASH", trace)
+                    selfHealRepository.record(BugTicketEntity(
+                        errorHash = hash,
+                        source = "RUNTIME_CRASH",
+                        title = trace.lineSequence().firstOrNull { it.isNotBlank() }?.take(180) ?: "Previous app crash",
+                        category = "CRITICAL_CRASH",
+                        severity = "CRITICAL",
+                        stackTrace = trace,
+                        deviceContext = "Android ${Build.VERSION.RELEASE}; ${Build.MANUFACTURER} ${Build.MODEL}; ${BuildConfig.VERSION_NAME}",
+                        createdAt = now,
+                        updatedAt = now,
+                    ))
+                    pending.delete()
+                }
+            }
+        }
+        SelfHealEventBus.onPlaybackFailure = { title, mediaId, code, message ->
+            applicationScope.launch(Dispatchers.IO) {
+                val now = Clock.System.now().toEpochMilliseconds()
+                val diagnostic = "${message.take(4_000)}\ntrack=${mediaId.take(256)}"
+                val hash = ErrorFingerprintGenerator.generate("PLAYBACK_ERROR", diagnostic, code.toString())
+                runCatching {
+                    selfHealRepository.record(BugTicketEntity(
+                        errorHash = hash,
+                        source = "PLAYBACK_ERROR",
+                        title = title.take(180).ifBlank { "Playback error $code" },
+                        category = if ("403" in message) "PLAYBACK_403" else "NETWORK_PERF",
+                        severity = "HIGH",
+                        stackTrace = diagnostic,
+                        deviceContext = "Android ${Build.VERSION.RELEASE}; ${Build.MANUFACTURER} ${Build.MODEL}",
+                        createdAt = now,
+                        updatedAt = now,
+                    ))
+                }
+            }
         }
         // provide custom configuration
         val workConfig =
@@ -110,6 +158,8 @@ class SimpMusicApplication :
             .minTimeBetweenCrashesMs(2000) // default: 3000 //default: bug image
             .restartActivity(MainActivity::class.java) // default: null (your app's launch activity)
             .apply()
+        // Wrap the crash SDK's handler so its restart/report flow remains intact.
+        Thread.setDefaultUncaughtExceptionHandler(UnxCrashHandler(this))
 
         @SuppressLint("DiscouragedPrivateApi")
         val field: Field = CursorWindow::class.java.getDeclaredField("sCursorWindowSize")

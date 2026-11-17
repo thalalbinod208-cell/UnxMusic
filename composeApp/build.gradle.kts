@@ -128,6 +128,7 @@ kotlin {
             // Other module
             api(projects.common)
             api(projects.domain)
+            implementation(projects.aiService)
             implementation(projects.data)
 
             // Last.fm (gated: real scrobbler for full builds, no-op stub for FOSS builds).

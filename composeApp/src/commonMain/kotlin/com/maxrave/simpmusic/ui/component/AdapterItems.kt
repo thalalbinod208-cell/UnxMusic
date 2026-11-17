@@ -534,14 +534,15 @@ fun HomeItemContentPlaylist(
     fillMaxWidth: Boolean = false,
     // Home's hover play button; null leaves the card exactly as it was.
     onPlay: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
     val titleColor = if (forceDark) Color.White else MaterialTheme.colorScheme.onSurface
     val textWidth = if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier.width(thumbSize)
     val (hoverModifier, hovered) = rememberCardHover(enabled = onPlay != null)
     Box(
-        Modifier
+        modifier
             .then(hoverModifier)
-            .wrapContentSize()
+            .then(if (fillMaxWidth) Modifier.fillMaxWidth() else Modifier.wrapContentSize())
             .focusable(true)
             .clip(RoundedCornerShape(8.dp))
             .clickable {

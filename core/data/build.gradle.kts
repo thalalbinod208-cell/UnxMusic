@@ -81,6 +81,7 @@ kotlin {
                 // application id (only Full builds do).
                 implementation(projects.discord)
                 implementation(projects.listenTogether)
+                implementation(projects.ktorExt)
 
                 // Last.fm (gated: real scrobbler for full builds, no-op stub for FOSS builds)
                 if (isFullBuild) {
@@ -93,6 +94,7 @@ kotlin {
                 // Add KMP dependencies here
                 // Kotlinx serialization
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.core)
 
                 // DataStore
                 implementation(libs.datastore.preferences)

@@ -41,6 +41,7 @@ import com.maxrave.domain.mediaservice.player.MediaPlayerInterface
 import com.maxrave.domain.mediaservice.player.MediaPlayerListener
 import com.maxrave.domain.repository.StreamRepository
 import com.maxrave.logger.Logger
+import com.maxrave.domain.selfheal.SelfHealEventBus
 import com.maxrave.media3.audio.BiquadFilter
 import com.maxrave.media3.waveform.WaveformReader
 import com.maxrave.media3.audio.ConvolutionReverbAudioProcessor
@@ -1929,6 +1930,14 @@ internal class CrossfadeExoPlayerAdapter(
                     if (player != currentPlayer) {
                         Logger.d(TAG, "Ignoring onPlayerError from non-current player")
                         return
+                    }
+                    runCatching {
+                        SelfHealEventBus.reportPlaybackFailure(
+                            player.mediaMetadata.title?.toString().orEmpty(),
+                            player.currentMediaItem?.mediaId.orEmpty(),
+                            error.errorCode,
+                            error.message.orEmpty(),
+                        )
                     }
 
                     // Retry for source errors (expired/invalid stream URL)

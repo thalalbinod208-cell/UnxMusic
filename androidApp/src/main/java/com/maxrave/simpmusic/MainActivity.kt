@@ -216,12 +216,14 @@ class MainActivity : AppCompatActivity() {
 
         enableEdgeToEdge(
             navigationBarStyle =
-                SystemBarStyle.dark(
-                    scrim = Color.Transparent.toArgb(),
+                SystemBarStyle.auto(
+                    lightScrim = Color.Transparent.toArgb(),
+                    darkScrim = Color.Transparent.toArgb(),
                 ),
             statusBarStyle =
-                SystemBarStyle.dark(
-                    scrim = Color.Transparent.toArgb(),
+                SystemBarStyle.auto(
+                    lightScrim = Color.Transparent.toArgb(),
+                    darkScrim = Color.Transparent.toArgb(),
                 ),
         )
         viewModel.checkIsRestoring()

@@ -35,7 +35,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.Lifecycle
@@ -55,7 +54,6 @@ import com.maxrave.simpmusic.expect.openUrl
 import com.maxrave.simpmusic.expect.ui.PlatformWebView
 import com.maxrave.simpmusic.expect.ui.createWebViewCookieManager
 import com.maxrave.simpmusic.expect.ui.rememberWebViewState
-import com.maxrave.simpmusic.extension.ultraThinBarStyle
 import com.maxrave.simpmusic.ui.component.DevLogInBottomSheet
 import com.maxrave.simpmusic.ui.component.DevLogInType
 import com.maxrave.simpmusic.ui.component.EndOfPage
@@ -65,16 +63,13 @@ import com.maxrave.simpmusic.ui.component.SettingItem
 import com.maxrave.simpmusic.ui.icon.ArrowBackIosNew
 import com.maxrave.simpmusic.ui.icon.LogoDev
 import com.maxrave.simpmusic.ui.icon.SimpIcons
+import com.maxrave.simpmusic.ui.navigation.destination.home.HomeDestination
 import com.maxrave.simpmusic.ui.theme.typo
 import com.maxrave.simpmusic.viewModel.LogInViewModel
 import com.maxrave.simpmusic.viewModel.SettingsViewModel
 import com.maxrave.simpmusic.viewModel.BrowserLoginViewModel
 import com.maxrave.simpmusic.viewModel.BrowserLoginUiState
 import com.maxrave.simpmusic.viewModel.requiresFileAccess
-import dev.chrisbanes.haze.HazeInput
-import dev.chrisbanes.haze.blur.hazeBlur
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -100,6 +95,10 @@ import simpmusic.composeapp.generated.resources.log_in
 import simpmusic.composeapp.generated.resources.login_failed
 import simpmusic.composeapp.generated.resources.login_success
 
+private fun NavController.returnFromLogin() {
+    if (!navigateUp()) navigate(HomeDestination)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -110,7 +109,6 @@ fun LoginScreen(
     hideBottomNavigation: () -> Unit,
     showBottomNavigation: () -> Unit,
 ) {
-    val hazeState = rememberHazeState()
     val coroutineScope = rememberCoroutineScope()
     var devLoginSheet by rememberSaveable {
         mutableStateOf(false)
@@ -135,7 +133,7 @@ fun LoginScreen(
     LaunchedEffect(browserState?.completed) {
         if (browserState?.completed == true) {
             viewModel.makeToast(getString(Res.string.login_success))
-            navController.navigateUp()
+            navController.returnFromLogin()
         }
     }
 
@@ -150,7 +148,7 @@ fun LoginScreen(
                         val success = settingsViewModel.addAccount(cookie)
                         if (success) {
                             viewModel.makeToast(getString(Res.string.login_success))
-                            navController.navigateUp()
+                            navController.returnFromLogin()
                         } else {
                             viewModel.makeToast(getString(Res.string.login_failed))
                         }
@@ -187,7 +185,7 @@ fun LoginScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().hazeSource(state = hazeState)) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(if (browserViewModel != null) Modifier.fillMaxSize() else Modifier) {
             Spacer(
                 Modifier
@@ -244,7 +242,7 @@ fun LoginScreen(
 
                             if (success) {
                                 viewModel.makeToast(getString(Res.string.login_success))
-                                navController.navigateUp()
+                                navController.returnFromLogin()
                             } else {
                                 isCompletingYouTubeLogin = false
                                 viewModel.makeToast(getString(Res.string.login_failed))
@@ -257,12 +255,12 @@ fun LoginScreen(
 
         if (browserViewModel != null) manualLogin()
 
-        // Top App Bar with haze effect
+        // Keep the app header on its own theme surface while Google's sign-in page loads. Blurring
+        // the WebView made this bar flash white on the first frame before turning dark.
         CenterAlignedTopAppBar(
             modifier =
                 Modifier
-                    .align(Alignment.TopCenter)
-                    .hazeBlur(HazeInput.Sources(hazeState), ultraThinBarStyle()),
+                    .align(Alignment.TopCenter),
             title = {
                 Text(
                     textAlign = TextAlign.Center,
@@ -278,7 +276,7 @@ fun LoginScreen(
                         true,
                         tint = MaterialTheme.colorScheme.onSurface,
                     ) {
-                        navController.navigateUp()
+                        navController.returnFromLogin()
                     }
                 }
             },
@@ -297,7 +295,7 @@ fun LoginScreen(
             },
             colors =
                 TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
+                    containerColor = MaterialTheme.colorScheme.surface,
                 ),
         )
     }

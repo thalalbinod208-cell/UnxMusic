@@ -39,6 +39,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 implementation(libs.room.runtime)
+                implementation(libs.okio)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.common)
                 api(libs.androidx.paging.common)

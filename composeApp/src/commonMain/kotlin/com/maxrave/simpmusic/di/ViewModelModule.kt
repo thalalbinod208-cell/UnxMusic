@@ -36,9 +36,11 @@ import com.maxrave.simpmusic.viewModel.TasteViewModel
 import com.maxrave.simpmusic.viewModel.WrappedViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import com.maxrave.simpmusic.selfheal.ai.GeminiBugSolver
 
 val viewModelModule =
     module {
+        single { GeminiBugSolver(get(), get()) }
         single {
             SharedViewModel(
                 get(),

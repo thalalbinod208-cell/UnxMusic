@@ -5,6 +5,7 @@ import com.maxrave.domain.data.model.metadata.Lyrics
 import com.maxrave.domain.data.model.taste.TasteException
 import com.maxrave.domain.data.model.taste.TasteInput
 import com.maxrave.domain.data.model.taste.TasteReading
+import com.maxrave.domain.selfheal.BugSolution
 import kotlin.coroutines.cancellation.CancellationException
 
 class AiClient {
@@ -93,6 +94,17 @@ class AiClient {
             Result.failure(TasteException(kind, e.statusCode, e.error.detail?.message ?: e.message, e))
         } catch (e: Exception) {
             Result.failure(TasteException(TasteException.Kind.TEMPORARY, message = e.message, cause = e))
+        }
+    }
+
+    suspend fun solveBug(prompt: String): Result<BugSolution> {
+        val service = aiService ?: return Result.failure(TasteException(TasteException.Kind.NOT_CONFIGURED))
+        return try {
+            Result.success(service.solveBug(prompt))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

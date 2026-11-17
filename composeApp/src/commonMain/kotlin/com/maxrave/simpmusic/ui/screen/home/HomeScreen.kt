@@ -153,7 +153,6 @@ import com.maxrave.simpmusic.ui.component.HomeDiscoverSection
 import com.maxrave.simpmusic.ui.component.HomeContentCarousel
 import com.maxrave.simpmusic.ui.component.HomeItem
 import com.maxrave.simpmusic.ui.component.HomeItemContentPlaylist
-import com.maxrave.simpmusic.ui.component.ItemArtistChart
 import com.maxrave.simpmusic.ui.component.ItemArtistChartCard
 import com.maxrave.simpmusic.ui.component.LocalAppDialogOpen
 import com.maxrave.simpmusic.ui.component.LocalNowPlayingOpen
@@ -1615,8 +1614,6 @@ fun ChartData(
     // Start, not the default Center: a centred column leaves the one before it cut through its rank.
     val snapperFlingBehavior2 =
         rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyListState = lazyListState2, snapPosition = SnapPosition.Start))
-    val isPortrait = getScreenSizeInfo().let { it.wDP < it.hDP }
-
     Column(
         Modifier.onGloballyPositioned { coordinates ->
             with(density) {
@@ -1640,6 +1637,7 @@ fun ChartData(
                 rememberSnapFlingBehavior(
                     SnapLayoutInfoProvider(lazyListState = lazyListState, snapPosition = SnapPosition.Start),
                 )
+            val isGenreChart = item.title.contains("genre", ignoreCase = true)
             val isVideoCharts = item.title.contains("video", ignoreCase = true)
             val playlistThumbSize =
                 if (isVideoCharts) {
@@ -1648,27 +1646,55 @@ fun ChartData(
                 } else {
                     ((gridWidthDp - 28.dp) / 3f - 20.dp).coerceAtLeast(92.dp)
                 }
-            LazyRow(
-                modifier = Modifier.mouseDragScroll(lazyListState, snapperFlingBehavior),
-                state = lazyListState,
-                flingBehavior = snapperFlingBehavior,
-            ) {
-                items(item.playlists.size, key = { index ->
-                    val data = item.playlists[index]
-                    data.id + data.title + index
-                }) {
-                    HomeItemContentPlaylist(
-                        onClick = {
-                            navController.navigate(
-                                PlaylistDestination(
-                                    playlistId = item.playlists[it].id,
-                                    isYourYouTubePlaylist = false,
-                                ),
+            if (isGenreChart) {
+                // Genres are a browsable set, not a carousel: show two complete cards per row.
+                item.playlists.chunked(2).forEach { rowItems ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        rowItems.forEach { playlist ->
+                            HomeItemContentPlaylist(
+                                onClick = {
+                                    navController.navigate(
+                                        PlaylistDestination(
+                                            playlistId = playlist.id,
+                                            isYourYouTubePlaylist = false,
+                                        ),
+                                    )
+                                },
+                                data = playlist,
+                                thumbSize = ((gridWidthDp - 8.dp) / 2f).coerceAtLeast(120.dp),
+                                fillMaxWidth = true,
+                                modifier = Modifier.weight(1f),
                             )
-                        },
-                        data = item.playlists[it],
-                        thumbSize = playlistThumbSize,
-                    )
+                        }
+                        if (rowItems.size == 1) Spacer(Modifier.weight(1f))
+                    }
+                }
+            } else {
+                LazyRow(
+                    modifier = Modifier.mouseDragScroll(lazyListState, snapperFlingBehavior),
+                    state = lazyListState,
+                    flingBehavior = snapperFlingBehavior,
+                ) {
+                    items(item.playlists.size, key = { index ->
+                        val data = item.playlists[index]
+                        data.id + data.title + index
+                    }) {
+                        HomeItemContentPlaylist(
+                            onClick = {
+                                navController.navigate(
+                                    PlaylistDestination(
+                                        playlistId = item.playlists[it].id,
+                                        isYourYouTubePlaylist = false,
+                                    ),
+                                )
+                            },
+                            data = item.playlists[it],
+                            thumbSize = playlistThumbSize,
+                        )
+                    }
                 }
             }
         }
@@ -1715,7 +1741,8 @@ fun ChartData(
             scrollState = lazyListState2,
             flingBehavior = snapperFlingBehavior2,
         )
-        // Ranked podcast shows, laid out exactly like the artist chart above.
+        // Ranked podcast shows read as a full-width editorial list, so long show titles and authors
+        // remain legible without a clipped horizontal grid.
         chart.podcasts?.let { podcasts ->
             Text(
                 text = podcasts.title,
@@ -1727,31 +1754,58 @@ fun ChartData(
                         .fillMaxWidth()
                         .padding(vertical = 10.dp),
             )
-            val podcastGridState = rememberLazyGridState()
-            val podcastFlingBehavior =
-                rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = podcastGridState, snapPosition = SnapPosition.Start))
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(3),
-                modifier = Modifier.height(240.dp).mouseDragScroll(podcastGridState, podcastFlingBehavior),
-                state = podcastGridState,
-                flingBehavior = podcastFlingBehavior,
-            ) {
-                items(podcasts.shows.size, key = { index -> podcasts.shows[index].browseId + index }) {
-                    val data = podcasts.shows[it]
-                    ItemArtistChart(
-                        onClick = { navController.navigate(PodcastDestination(podcastId = data.browseId)) },
-                        data = data,
-                        widthDp = if (isPortrait) gridWidthDp else minOf(gridWidthDp, LandscapeGridItemMaxWidth),
-                        thumbnailShape = ArtworkShape,
-                        subtitle = data.subscribers,
-                    )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                podcasts.shows.forEach { data ->
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                                .clickable { navController.navigate(PodcastDestination(podcastId = data.browseId)) }
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = data.rank,
+                            style = typo().titleLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.width(34.dp),
+                        )
+                        val thumb = data.thumbnails.lastOrNull()?.url
+                        AsyncImage(
+                            model =
+                                ImageRequest.Builder(LocalPlatformContext.current)
+                                    .data(thumb)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .diskCacheKey(thumb)
+                                    .crossfade(350)
+                                    .build(),
+                            placeholder = rememberHolderPainter(),
+                            error = rememberHolderPainter(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(68.dp).clip(RoundedCornerShape(12.dp)),
+                        )
+                        Column(Modifier.weight(1f).padding(start = 14.dp)) {
+                            Text(
+                                text = data.title,
+                                style = typo().titleSmall,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(
+                                text = data.subscribers,
+                                style = typo().bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
                 }
             }
-            HorizontalScrollBar(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                scrollState = podcastGridState,
-                flingBehavior = podcastFlingBehavior,
-            )
         }
     }
 }

@@ -531,7 +531,7 @@ fun LibraryScreen(
                         isAnimated = false,
                         isSelected = type == currentFilter,
                         modifier = Modifier.width(chipWidth).fillMaxWidth(),
-                        maxLines = 2,
+                        maxLines = 1,
                         text =
                             when (type) {
                                 LibraryChipType.YOUR_LIBRARY -> stringResource(Res.string.your_library)

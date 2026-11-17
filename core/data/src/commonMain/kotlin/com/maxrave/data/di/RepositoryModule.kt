@@ -20,6 +20,7 @@ import com.maxrave.data.repository.PodcastRepositoryImpl
 import com.maxrave.data.repository.SearchRepositoryImpl
 import com.maxrave.data.repository.SongRepositoryImpl
 import com.maxrave.data.repository.StreamRepositoryImpl
+import com.maxrave.data.repository.SelfHealRepositoryImpl
 import com.maxrave.data.repository.TasteRepositoryImpl
 import com.maxrave.data.repository.UpdateRepositoryImpl
 import com.maxrave.domain.repository.AccountRepository
@@ -39,10 +40,13 @@ import com.maxrave.domain.repository.PodcastRepository
 import com.maxrave.domain.repository.SearchRepository
 import com.maxrave.domain.repository.SongRepository
 import com.maxrave.domain.repository.StreamRepository
+import com.maxrave.domain.repository.SelfHealRepository
 import com.maxrave.domain.repository.TasteRepository
 import com.maxrave.domain.repository.UpdateRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import io.ktor.client.HttpClient
+import com.maxrave.ktorext.getEngine
 
 val repositoryModule =
     module {
@@ -118,6 +122,10 @@ val repositoryModule =
 
         single<StreamRepository>(createdAtStart = true) {
             StreamRepositoryImpl(get(), get())
+        }
+
+        single<SelfHealRepository> {
+            SelfHealRepositoryImpl(get(), HttpClient(getEngine()))
         }
 
         single<UpdateRepository>(createdAtStart = true) {

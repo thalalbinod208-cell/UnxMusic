@@ -81,7 +81,8 @@ internal class HomeRepositoryImpl(
         flow {
             // Warm-start Home from the last successful feed while the network refresh runs.
             // This survives force-closing the app; clearing app storage naturally clears this cache.
-            if (params == null && !skipCache) {
+            var cachedDefaultFeed: CachedHomeFeed? = null
+            if (params == null) {
                 dataStoreManager.getString(HOME_FEED_CACHE_KEY).first()
                     ?.takeIf { it.isNotBlank() }
                     ?.let { cachedJson ->
@@ -89,7 +90,10 @@ internal class HomeRepositoryImpl(
                             .getOrNull()
                             ?.takeIf { it.items.isNotEmpty() }
                             ?.let { cached ->
-                                emit(Resource.Success(Triple(cached.continuation, cached.items, cached.background)))
+                                cachedDefaultFeed = cached
+                                if (!skipCache) {
+                                    emit(Resource.Success(Triple(cached.continuation, cached.items, cached.background)))
+                                }
                             }
                     }
             }
@@ -198,6 +202,13 @@ internal class HomeRepositoryImpl(
                                 songString,
                             ),
                         )
+                        // The personalized Home response occasionally omits radio/list shelves
+                        // (notably Quick picks) after account login or a pull refresh. Keep the
+                        // last known list-style shelves in the default feed and its disk cache.
+                        cachedDefaultFeed?.items
+                            ?.filter { cached ->
+                                cached.itemsPerColumn != null && list.none { it.title == cached.title }
+                            }?.let(list::addAll)
 //                        var count = 0
 //                        while (count < limit && continueParam != null) {
 //                            youTube

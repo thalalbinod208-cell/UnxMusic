@@ -18,10 +18,10 @@
 | Project | Details |
 | --- | --- |
 | App | UnX Music |
-| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.28** |
+| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.29** |
 | Android application ID | `com.unx.muice` |
 | Android label | `UnX Music` |
-| Current version code | `91` |
+| Current version code | `92` |
 | Main stack | Kotlin · Android · Jetpack Compose · Media3 |
 | Source license | [GPL-3.0-or-later](LICENSE) |
 
@@ -57,7 +57,7 @@ These feature boards are visual references; the [asset library](docs/ASSET_LIBRA
 
 ### [Download the latest APK](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest)
 
-Current source version: **2.6.28** · Application ID: `com.unx.muice`
+Current source version: **2.6.29** · Application ID: `com.unx.muice`
 
 </div>
 

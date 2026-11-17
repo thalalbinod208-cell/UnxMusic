@@ -1,0 +1,12 @@
+UnX Music 2.6.29 (version code 92)
+
+- Preserve Quick picks when authenticated home refreshes omit the shelf.
+- Rework Home genres into a full-width two-column grid and present weekly podcasts as readable ranked rows.
+- Remove remaining SimpMusic Chart promo banners and use UnX Charts naming.
+- Improve login navigation and Android system bar rendering.
+- Add a local diagnostics console with crash and playback ticket capture, GitHub issue sync, and on-demand AI ticket analysis using the existing configured AI provider/key.
+- Fix an Android startup dependency error by providing the GitHub sync repository its own Ktor HTTP client.
+- Add Room migration 28 to 29 and diagnostic fingerprint / AI response parser tests.
+- Fix Android Auto playback when the selected item exists in the temporary search results but not yet in the local song database.
+
+This release does not claim that all upstream reports are resolved. GitHub issues include desktop-only reports, feature requests, stale-version reports, and problems dependent on external services/devices.

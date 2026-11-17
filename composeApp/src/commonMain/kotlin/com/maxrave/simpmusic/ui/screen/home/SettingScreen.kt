@@ -148,6 +148,7 @@ import com.maxrave.simpmusic.ui.icon.Search
 import com.maxrave.simpmusic.ui.icon.Settings
 import com.maxrave.simpmusic.ui.icon.SimpIcons
 import com.maxrave.simpmusic.ui.navigation.destination.home.CreditDestination
+import com.maxrave.simpmusic.ui.navigation.destination.home.SelfHealConsoleDestination
 import com.maxrave.simpmusic.ui.navigation.destination.login.DiscordLoginDestination
 import com.maxrave.simpmusic.ui.navigation.destination.login.LastfmLoginDestination
 import com.maxrave.simpmusic.ui.navigation.destination.login.LoginDestination
@@ -2806,6 +2807,11 @@ fun SettingScreen(
                     onClick = {
                         navController.navigate(CreditDestination)
                     },
+                )
+                SettingItem(
+                    title = "Developer · AI Self-Heal Console",
+                    subtitle = "Local diagnostics, GitHub issues, and on-demand AI analysis",
+                    onClick = { navController.navigate(SelfHealConsoleDestination) },
                 )
                 SettingItem(
                     title = stringResource(Res.string.auto_check_for_update),

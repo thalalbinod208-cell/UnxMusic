@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import androidx.room.execSQL
 import androidx.room.useWriterConnection
 import com.maxrave.domain.data.entities.AlbumEntity
+import com.maxrave.domain.data.entities.BugTicketEntity
 import com.maxrave.domain.data.entities.ArtistEntity
 import com.maxrave.domain.data.entities.ArtistMotionEntity
 import com.maxrave.domain.data.entities.AutoEqCurveEntity
@@ -42,9 +43,9 @@ import com.maxrave.domain.data.entities.sync.SyncChangeEntity
         NotificationEntity::class, TranslatedLyricsEntity::class, PodcastsEntity::class, EpisodeEntity::class,
         YourYouTubePlaylistList::class, PlaybackEventEntity::class, EventArtistEntity::class,
         AutoEqEntryEntity::class, AutoEqIndexMetaEntity::class, AutoEqCurveEntity::class,
-        ArtistMotionEntity::class, SyncChangeEntity::class,
+        ArtistMotionEntity::class, SyncChangeEntity::class, BugTicketEntity::class,
     ],
-    version = 28,
+    version = 29,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3), AutoMigration(
@@ -105,6 +106,7 @@ import com.maxrave.domain.data.entities.sync.SyncChangeEntity
         AutoMigration(27, 28),
         AutoMigration(26, 28),
         AutoMigration(25, 28),
+        AutoMigration(28, 29),
     ],
 )
 @TypeConverters(Converters::class)
@@ -112,6 +114,8 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract fun getDatabaseDao(): DatabaseDao
 
     abstract fun getSyncDao(): SyncDao
+
+    abstract fun getBugTicketDao(): BugTicketDao
 
     /**
      * Rewrite the database file so the pages a bulk delete freed go back to the filesystem.

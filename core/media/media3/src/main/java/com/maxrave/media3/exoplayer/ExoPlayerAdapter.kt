@@ -19,6 +19,7 @@ import com.maxrave.domain.data.player.PlayerConstants
 import com.maxrave.domain.data.player.PlayerError
 import com.maxrave.domain.mediaservice.player.MediaPlayerInterface
 import com.maxrave.domain.mediaservice.player.MediaPlayerListener
+import com.maxrave.domain.selfheal.SelfHealEventBus
 import com.maxrave.logger.Logger
 import com.maxrave.media3.utils.BetterShuffleOrder
 
@@ -349,6 +350,14 @@ class ExoPlayerAdapter(
         }
 
         override fun onPlayerError(error: PlaybackException) {
+            runCatching {
+                SelfHealEventBus.reportPlaybackFailure(
+                    exoPlayer.mediaMetadata.title?.toString().orEmpty(),
+                    exoPlayer.currentMediaItem?.mediaId.orEmpty(),
+                    error.errorCode,
+                    error.message.orEmpty(),
+                )
+            }
             val domainErrorCode =
                 when (error.errorCode) {
                     PlaybackException.ERROR_CODE_TIMEOUT -> PlayerConstants.ERROR_CODE_TIMEOUT

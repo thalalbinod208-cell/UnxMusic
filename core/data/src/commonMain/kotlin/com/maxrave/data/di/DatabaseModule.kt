@@ -51,6 +51,9 @@ val databaseModule =
             get<MusicDatabase>().getSyncDao()
         }
         single(createdAtStart = true) {
+            get<MusicDatabase>().getBugTicketDao()
+        }
+        single(createdAtStart = true) {
             SyncPrefs(createLibrarySyncDataStore())
         }
         single(createdAtStart = true) {
