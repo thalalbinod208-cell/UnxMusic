@@ -1,0 +1,8 @@
+pinyin4j license metadata reference
+
+The Maven POM for com.belerweb:pinyin4j:2.5.1 declares only “BSD” and links to the legacy BSD license page; it does not identify an SPDX BSD variant. The published source archive also contains files marked GPL version 2 or later and bundled Hewlett-Packard Sparta code marked LGPL version 2.1 or later. Do not treat the generic POM label as a complete per-file license inventory.
+
+POM: https://repo.maven.apache.org/maven2/com/belerweb/pinyin4j/2.5.1/pinyin4j-2.5.1.pom
+Source: https://repo.maven.apache.org/maven2/com/belerweb/pinyin4j/2.5.1/pinyin4j-2.5.1-sources.jar
+POM license URL: http://opensource.org/licenses/bsd-license.html
+The applicable GPL-2.0-or-later and LGPL-2.1-or-later texts are included in this LICENSES directory.

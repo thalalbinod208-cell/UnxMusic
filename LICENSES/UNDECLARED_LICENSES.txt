@@ -1,0 +1,11 @@
+Components with no license identifier in the generated dependency inventory
+
+The following records have no license entry in the checked-in AboutLibraries data. They are listed here for visibility and need confirmation from their upstream maintainers before redistribution decisions are based on this inventory.
+
+- com.github.TeamNewPipe:nanojson:c7a6c1c08d16b6d5ecded34758e6415e07be2166 — https://github.com/mmastrac/nanojson
+- com.github.maxrave-dev.PipePipeExtractor:PipePipeExtractor:27aac1e14e — https://github.com/maxrave-dev/PipePipeExtractor (upstream repository declares GPL-3.0)
+- com.github.maxrave-dev.PipePipeExtractor:extractor:27aac1e14e — same upstream repository
+- com.github.maxrave-dev.PipePipeExtractor:timeago-parser:27aac1e14e — same upstream repository
+- com.github.maxrave-dev:PipePipeExtractor:27aac1e14e — https://github.com/maxrave-dev/PipePipeExtractor (upstream repository declares GPL-3.0)
+
+The PipePipeExtractor repository's GPL-3.0 text is included as LICENSES/GPL-3.0.txt. The nanojson project does not declare a license in the resolved Maven POM or dependency inventory; verify its rights independently.

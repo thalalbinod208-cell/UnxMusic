@@ -1,0 +1,6 @@
+Android Software Development Kit License
+
+The Google Play services artifacts below are marked ASDKL by the dependency metadata. The SDK license is an agreement presented by Google, not an open-source license text that this project can relicense or replace. Read the current terms at:
+https://developer.android.com/studio/terms.html
+
+Artifacts: com.google.android.gms:play-services-base@18.11.0, com.google.android.gms:play-services-basement@18.12.0, com.google.android.gms:play-services-cast@23.0.0, com.google.android.gms:play-services-cast-framework@23.0.0, com.google.android.gms:play-services-flags@18.1.0, com.google.android.gms:play-services-tasks@18.4.1
