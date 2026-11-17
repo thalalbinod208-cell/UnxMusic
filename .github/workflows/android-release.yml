@@ -19,6 +19,9 @@ permissions:
 jobs:
   build-full-release:
     name: Build full release version
+    # Signed APK publishing needs protected signing secrets. Keep regular pushes
+    # green when this repository has not been configured for signed releases.
+    if: vars.ENABLE_SIGNED_RELEASES == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -81,6 +84,7 @@ jobs:
   # Full build, arm64-v8a only, signed with the same key so the official-build check accepts it.
   build-vivo-release:
     name: Build vivo release version
+    if: vars.ENABLE_SIGNED_RELEASES == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -141,6 +145,7 @@ jobs:
 
   build-foss-release:
     name: Build foss release version
+    if: vars.ENABLE_SIGNED_RELEASES == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
