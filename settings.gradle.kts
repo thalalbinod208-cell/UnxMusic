@@ -34,7 +34,7 @@ val coreDir = File(rootDir, "core")
 val serviceDir = File(rootDir, "core/service")
 val mediaDir = File(rootDir, "core/media")
 
-rootProject.name = "UnX Music"
+rootProject.name = "UnXMusic"
 include(
     ":androidApp",
     ":composeApp",
