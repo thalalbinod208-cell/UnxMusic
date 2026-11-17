@@ -195,6 +195,8 @@ import simpmusic.composeapp.generated.resources.invalid_json_format
 import simpmusic.composeapp.generated.resources.invalid_url_format
 import simpmusic.composeapp.generated.resources.not_set
 import simpmusic.composeapp.generated.resources.about_us
+import simpmusic.composeapp.generated.resources.account_connections
+import simpmusic.composeapp.generated.resources.account_not_connected
 import simpmusic.composeapp.generated.resources.add_an_account
 import simpmusic.composeapp.generated.resources.ai
 import simpmusic.composeapp.generated.resources.ai_api_key
@@ -789,6 +791,72 @@ fun SettingScreen(
                         onClick = { showLibrarySyncDialog = true },
                     )
                 }
+                SettingGroup(title = stringResource(Res.string.account_connections)) {
+                    SettingItem(
+                        title = stringResource(Res.string.youtube_account),
+                        subtitle =
+                            if (loggedIn == TRUE) {
+                                stringResource(Res.string.manage_your_youtube_accounts)
+                            } else {
+                                stringResource(Res.string.account_not_connected)
+                            },
+                        onClick = {
+                            if (loggedIn == TRUE) {
+                                viewModel.getAllGoogleAccount()
+                                showYouTubeAccountDialog = true
+                            } else {
+                                navController.navigate(LoginDestination)
+                            }
+                        },
+                    )
+                    SettingItem(
+                        title =
+                            if (spotifyLoggedIn) stringResource(Res.string.log_out_from_spotify) else stringResource(Res.string.log_in_to_spotify),
+                        subtitle =
+                            if (spotifyLoggedIn) stringResource(Res.string.logged_in) else stringResource(Res.string.account_not_connected),
+                        onClick = {
+                            if (spotifyLoggedIn) {
+                                viewModel.confirmLogOut(confirmLabel = runBlocking { getString(Res.string.log_out_from_spotify) }) {
+                                    viewModel.setSpotifyLogIn(false)
+                                }
+                            } else {
+                                navController.navigate(SpotifyLoginDestination)
+                            }
+                        },
+                    )
+                    SettingItem(
+                        title =
+                            if (discordLoggedIn) stringResource(Res.string.log_out_from_discord) else stringResource(Res.string.log_in_to_discord),
+                        subtitle =
+                            if (discordLoggedIn) stringResource(Res.string.logged_in) else stringResource(Res.string.account_not_connected),
+                        onClick = {
+                            if (discordLoggedIn) {
+                                viewModel.confirmLogOut(confirmLabel = runBlocking { getString(Res.string.log_out_from_discord) }) {
+                                    viewModel.logOutDiscord()
+                                }
+                            } else {
+                                navController.navigate(DiscordLoginDestination)
+                            }
+                        },
+                    )
+                    if (viewModel.lastfmAvailable) {
+                        SettingItem(
+                            title =
+                                if (lastfmLoggedIn) stringResource(Res.string.log_out_from_lastfm) else stringResource(Res.string.log_in_to_lastfm),
+                            subtitle =
+                                if (lastfmLoggedIn) stringResource(Res.string.logged_in_as, lastfmUsername) else stringResource(Res.string.account_not_connected),
+                            onClick = {
+                                if (lastfmLoggedIn) {
+                                    viewModel.confirmLogOut(confirmLabel = runBlocking { getString(Res.string.log_out_from_lastfm) }) {
+                                        viewModel.logOutLastfm()
+                                    }
+                                } else {
+                                    navController.navigate(LastfmLoginDestination)
+                                }
+                            },
+                        )
+                    }
+                }
                 SettingGroup(title = stringResource(Res.string.user_interface)) {
                     val themeModeLabels =
                         listOf(
@@ -1022,14 +1090,6 @@ fun SettingScreen(
         }
         item(key = "content") {
             SettingGroup(title = stringResource(Res.string.content)) {
-                SettingItem(
-                    title = stringResource(Res.string.youtube_account),
-                    subtitle = stringResource(Res.string.manage_your_youtube_accounts),
-                    onClick = {
-                        viewModel.getAllGoogleAccount()
-                        showYouTubeAccountDialog = true
-                    },
-                )
                 SettingItem(
                     title = stringResource(Res.string.language),
                     subtitle = SUPPORTED_LANGUAGE.getLanguageFromCode(language ?: "en-US"),
@@ -2143,31 +2203,6 @@ fun SettingScreen(
         item(key = "spotify") {
             SettingGroup(title = stringResource(Res.string.spotify)) {
                 SettingItem(
-                    // The title follows the state: a row that still reads "Log in" while logged in
-                    // gives no clue that tapping it signs you out.
-                    title =
-                        if (spotifyLoggedIn) {
-                            stringResource(Res.string.log_out_from_spotify)
-                        } else {
-                            stringResource(Res.string.log_in_to_spotify)
-                        },
-                    subtitle =
-                        if (spotifyLoggedIn) {
-                            stringResource(Res.string.logged_in)
-                        } else {
-                            stringResource(Res.string.intro_login_to_spotify)
-                        },
-                    onClick = {
-                        if (spotifyLoggedIn) {
-                            viewModel.confirmLogOut(
-                                confirmLabel = runBlocking { getString(Res.string.log_out_from_spotify) },
-                            ) { viewModel.setSpotifyLogIn(false) }
-                        } else {
-                            navController.navigate(SpotifyLoginDestination)
-                        }
-                    },
-                )
-                SettingItem(
                     title = stringResource(Res.string.enable_spotify_lyrics),
                     subtitle = stringResource(Res.string.spotify_lyrícs_info),
                     switch = (spotifyLyrics to { viewModel.setSpotifyLyrics(it) }),
@@ -2192,29 +2227,6 @@ fun SettingScreen(
         item(key = "discord") {
             SettingGroup(title = stringResource(Res.string.discord_integration)) {
                 SettingItem(
-                    title =
-                        if (discordLoggedIn) {
-                            stringResource(Res.string.log_out_from_discord)
-                        } else {
-                            stringResource(Res.string.log_in_to_discord)
-                        },
-                    subtitle =
-                        if (discordLoggedIn) {
-                            stringResource(Res.string.logged_in)
-                        } else {
-                            stringResource(Res.string.intro_login_to_discord)
-                        },
-                    onClick = {
-                        if (discordLoggedIn) {
-                            viewModel.confirmLogOut(
-                                confirmLabel = runBlocking { getString(Res.string.log_out_from_discord) },
-                            ) { viewModel.logOutDiscord() }
-                        } else {
-                            navController.navigate(DiscordLoginDestination)
-                        }
-                    },
-                )
-                SettingItem(
                     title = stringResource(Res.string.enable_rich_presence),
                     subtitle = stringResource(Res.string.rich_presence_info),
                     switch = (richPresenceEnabled to { viewModel.setDiscordRichPresenceEnabled(it) }),
@@ -2227,29 +2239,6 @@ fun SettingScreen(
         if (viewModel.lastfmAvailable) {
             item(key = "lastfm") {
                 SettingGroup(title = stringResource(Res.string.lastfm_integration)) {
-                    SettingItem(
-                        title =
-                            if (lastfmLoggedIn) {
-                                stringResource(Res.string.log_out_from_lastfm)
-                            } else {
-                                stringResource(Res.string.log_in_to_lastfm)
-                            },
-                        subtitle =
-                            if (lastfmLoggedIn) {
-                                stringResource(Res.string.logged_in_as, lastfmUsername)
-                            } else {
-                                stringResource(Res.string.intro_login_to_lastfm)
-                            },
-                        onClick = {
-                            if (lastfmLoggedIn) {
-                                viewModel.confirmLogOut(
-                                    confirmLabel = runBlocking { getString(Res.string.log_out_from_lastfm) },
-                                ) { viewModel.logOutLastfm() }
-                            } else {
-                                navController.navigate(LastfmLoginDestination)
-                            }
-                        },
-                    )
                     SettingItem(
                         title = stringResource(Res.string.enable_scrobbling),
                         subtitle = stringResource(Res.string.scrobbling_info),

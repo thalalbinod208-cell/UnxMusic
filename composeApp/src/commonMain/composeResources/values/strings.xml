@@ -340,7 +340,9 @@
     <string name="new_release">New release</string>
     <string name="music_video">Music video</string>
     <string name="your_music_is_always_up_to_date">YOUR MUSIC IS ALWAYS UP-TO-DATE</string>
-    <string name="youtube_account">YouTube Account</string>
+    <string name="youtube_account">YouTube Music / Google</string>
+    <string name="account_connections">Connected accounts</string>
+    <string name="account_not_connected">Not connected</string>
     <string name="manage_your_youtube_accounts">Manage your YouTube Accounts</string>
     <string name="sync_follow_to_youtube">Sync Follow with YouTube</string>
     <string name="equalizer">Equalizer</string>
