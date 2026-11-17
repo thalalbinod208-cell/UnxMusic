@@ -21,6 +21,8 @@ import org.simpmusic.lyrics.models.response.LyricsResponse
 import org.simpmusic.lyrics.models.response.TranslatedLyricsResponse
 import org.simpmusic.lyrics.parser.parseLrclibLyrics
 import kotlin.math.abs
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 private const val TAG = "SimpMusicLyricsClient"
 
@@ -30,6 +32,7 @@ class SimpMusicLyricsApiException(
     message: String,
 ) : Exception(message)
 
+@OptIn(ExperimentalTime::class)
 class SimpMusicLyricsClient {
     private val algorithm = ""
 
@@ -39,7 +42,7 @@ class SimpMusicLyricsClient {
     private val isInsertingLyrics: Boolean
         get() = insertingLyrics.second
 
-    private var tooManyRequest: Boolean = false
+    private var lyricsInsertCooldownUntilMillis: Long = 0L
 
     private var insertingTranslatedLyrics: Pair<String?, Boolean> = (null to false)
     private val isInsertingTranslatedLyrics: Boolean
@@ -63,7 +66,7 @@ class SimpMusicLyricsClient {
 
     suspend fun insertLyrics(lyricsBody: LyricsBody): Result<LyricsResponse> =
         runCatching {
-            if (tooManyRequest) {
+            if (Clock.System.now().toEpochMilliseconds() < lyricsInsertCooldownUntilMillis) {
                 throw IllegalStateException("Too many requests, please wait before trying again.")
             }
             if (isInsertingLyrics && insertingLyrics.first == lyricsBody.videoId) {
@@ -275,10 +278,8 @@ class SimpMusicLyricsClient {
 
     private suspend inline fun <reified T> HttpResponse.bodyOrThrow(): T {
         if (this.status.value == 429) {
-            tooManyRequest = true
-            Logger.e(TAG, "Too many requests: ${this.status.value}")
-        } else {
-            tooManyRequest = false
+            // Do not let a transient 429 block lyric contributions for the rest of the process.
+            lyricsInsertCooldownUntilMillis = Clock.System.now().toEpochMilliseconds() + 60_000L
         }
         try {
             val data = body<BaseResponse<T>>()
@@ -286,7 +287,11 @@ class SimpMusicLyricsClient {
                 val error = data.error
                 val message = "Error response: ${error.reason} (code: ${error.code})"
                 // 404 is the normal answer for a song nobody has added lyrics for, not a failure.
-                if (error.code == 404) Logger.d(TAG, message) else Logger.e(TAG, message)
+                when (error.code) {
+                    404 -> Logger.d(TAG, message)
+                    429 -> Logger.w(TAG, message)
+                    else -> Logger.e(TAG, message)
+                }
                 throw SimpMusicLyricsApiException(error.code, message)
             }
             return data.data ?: throw Exception("Response data is null")

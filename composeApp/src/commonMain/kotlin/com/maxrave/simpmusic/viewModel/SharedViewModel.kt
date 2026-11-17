@@ -150,6 +150,11 @@ class SharedViewModel(
     private val cacheRepository: CacheRepository,
     private val discordRepository: DiscordRepository,
 ) : BaseViewModel() {
+    // Playback state can emit the same item repeatedly (seek, service reconnect, lyrics pane
+    // re-entry). Keep one provider lookup per song during this short window to avoid hammering
+    // public lyrics endpoints and turning a single 429 into a stream of duplicate errors.
+    private val recentLyricsLookups = linkedMapOf<String, Long>()
+    private val lyricsLookupCooldownMillis = 20_000L
     var isFirstLiked: Boolean = false
     var isFirstMiniplayer: Boolean = false
     var isFirstSuggestions: Boolean = false
@@ -1600,6 +1605,13 @@ class SharedViewModel(
         // A live broadcast has nothing to sync lyrics to — the "duration" mpv reports for it is only
         // its seek window — so no provider is asked. Every caller comes through here.
         if (LiveStreamRegistry.isLive(song.videoId)) return
+        val now = Clock.System.now().toEpochMilliseconds()
+        val lastLookup = recentLyricsLookups[song.videoId]
+        if (lastLookup != null && now - lastLookup < lyricsLookupCooldownMillis) return
+        recentLyricsLookups[song.videoId] = now
+        while (recentLyricsLookups.size > 64) {
+            recentLyricsLookups.remove(recentLyricsLookups.keys.first())
+        }
         // A fetch in flight is not "no lyrics": switching the provider re-fetches the same song, and
         // Add lyrics offered meanwhile could be saved over the lyrics the new provider finds.
         _nowPlayingScreenData.update { it.copy(lyricsNotFound = false) }

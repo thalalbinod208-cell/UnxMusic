@@ -198,6 +198,7 @@ fun AppLogScreen(
     val errorCount = remember(errorLines, clearedAt) { errorLines.count { it.epochMillis > clearedAt } }
 
     val logListState = rememberLazyListState()
+    val errorListState = rememberLazyListState()
     // Only a person scrolling reaches onPostScroll; scrollToItem below is not a nested scroll, so
     // the jumps that keep the list at the bottom never switch the mode off by themselves. Asking
     // "am I at the end" once new lines arrive does not work instead: by then they are laid out below.
@@ -219,6 +220,10 @@ fun AppLogScreen(
     // EndOfPage, which lands on the very bottom.
     LaunchedEffect(shownLines.lastOrNull()?.id, stickToBottom, tab) {
         if (tab == 0 && stickToBottom && shownLines.isNotEmpty()) logListState.scrollToItem(shownLines.size)
+    }
+    // Error rows are newest-first, so Auto keeps row zero visible as new failures arrive.
+    LaunchedEffect(shownErrors.firstOrNull()?.id, stickToBottom, tab) {
+        if (tab == 1 && stickToBottom && shownErrors.isNotEmpty()) errorListState.scrollToItem(0)
     }
 
     val copied = stringResource(Res.string.copied_to_clipboard)
@@ -353,12 +358,11 @@ fun AppLogScreen(
 
                     else -> {
                         var expanded by remember { mutableStateOf(emptySet<Long>()) }
-                        val errorListState = rememberLazyListState()
                         LazyColumn(
                             state = errorListState,
                             contentPadding = PaddingValues(top = 12.dp, bottom = bottomInset),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.padding(horizontal = if (wide) 20.dp else 16.dp),
+                            modifier = Modifier.padding(horizontal = if (wide) 20.dp else 16.dp).nestedScroll(stickScroll),
                         ) {
                             itemsIndexed(shownErrors, key = { _, line -> line.id }) { _, line ->
                                 ErrorCard(

@@ -694,8 +694,14 @@ internal class LyricsCanvasRepositoryImpl(
         error: Throwable,
     ) {
         val message = "$what: ${error.message}"
-        if ((error as? SimpMusicLyricsApiException)?.code == 404) {
+        val apiCode = (error as? SimpMusicLyricsApiException)?.code
+        if (apiCode == 404) {
             Logger.d(simpMusicLyricsTag, message)
+        } else if (apiCode == 429) {
+            // Rate limiting is an expected temporary response from the shared lyrics service.
+            // Playback falls back to the configured secondary provider, so avoid presenting it as
+            // a fatal app error in the user's error-only log.
+            Logger.w(simpMusicLyricsTag, message)
         } else {
             Logger.e(simpMusicLyricsTag, message)
         }
