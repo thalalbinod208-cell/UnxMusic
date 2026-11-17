@@ -13,6 +13,18 @@
 
 UnX Music is an Android music app based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic). This repository contains the app source and release builds. Upstream attribution and original license notices are preserved.
 
+## Explore the interface
+
+These concept previews show the visual direction for the main listening surfaces. They are design illustrations, not screenshots from a running build.
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="assets/showcase/home-preview.svg" alt="Home screen design preview" width="100%" /><br /><strong>Home</strong></td>
+    <td align="center" width="33%"><img src="assets/showcase/player-preview.svg" alt="Now playing design preview" width="100%" /><br /><strong>Now Playing</strong></td>
+    <td align="center" width="33%"><img src="assets/showcase/library-preview.svg" alt="Library screen design preview" width="100%" /><br /><strong>Library</strong></td>
+  </tr>
+</table>
+
 ## Get the app
 
 <div align="center">
