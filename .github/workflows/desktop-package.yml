@@ -36,6 +36,7 @@ permissions:
 jobs:
   build-desktop-packages:
     name: Build desktop packages (AppImage + Mac zip + Windows msix)
+    if: vars.ENABLE_DESKTOP_RELEASES == 'true'
     runs-on: ubuntu-22.04
     defaults:
       run:
