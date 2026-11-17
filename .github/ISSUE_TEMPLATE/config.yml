@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Discord Community
-    url: https://discord.gg/Rq5tWVM9Hg
-    about: Ask questions, get help, and chat with other users before opening an issue
-  - name: FAQ
-    url: https://github.com/maxrave-dev/SimpMusic#faq
-    about: Check the FAQ — common questions (lyrics accuracy, the app name, and more) are answered here
+  - name: App support
+    url: https://github.com/thalalbinod208-cell/UnxMusic/blob/main/SUPPORT.md
+    about: Read how to report a problem and share useful diagnostics safely.
+  - name: Security report
+    url: https://github.com/thalalbinod208-cell/UnxMusic/security/advisories/new
+    about: Report a vulnerability privately; do not post credentials or exploit details publicly.
+  - name: Releases
+    url: https://github.com/thalalbinod208-cell/UnxMusic/releases
+    about: Download the latest release and read release notes.

@@ -9,29 +9,11 @@ BUILD_VARIANT="full"
 # --vivo builds vivoAndroidApp: the same app under a package vivo's Origin Island follows
 MODULE="androidApp"
 NAME_SUFFIX=""
-KEYSTORE_PATH="./simpmusic.jks"
+KEYSTORE_PATH="${KEYSTORE_PATH:-./unx-music-release.jks}"
 # Read passwords from environment variables or use default (for backward compatibility)
 KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD}"
 KEY_ALIAS="${KEY_ALIAS}"
 KEY_PASSWORD="${KEY_PASSWORD}"
-
-# Check if KEY_PASSWORD is set
-if [ -z "$KEY_PASSWORD" ]; then
-  echo "Error: KEY_PASSWORD environment variable must be set"
-  exit 1
-fi
-
-if [ -z "$KEYSTORE_PASSWORD" ]; then
-  echo "Error: KEYSTORE_PASSWORD environment variable must be set"
-  exit 1
-fi
-
-if [ -z "$KEY_ALIAS" ]; then
-  echo "Error: KEY_ALIAS environment variable must be set"
-  exit 1
-fi
-
-
 
 # Parse command line arguments
 print_usage() {
@@ -45,6 +27,8 @@ print_usage() {
   echo "  -h, --help         Show this help message"
   echo ""
   echo "Environment variables:"
+  echo "  ANDROID_HOME        Android SDK directory"
+  echo "  KEYSTORE_PATH       Release keystore path (default: ./unx-music-release.jks)"
   echo "  KEYSTORE_PASSWORD  Password for the keystore"
   echo "  KEY_PASSWORD       Password for the key (required, no default)"
   echo "  KEY_ALIAS          Alias for the key (required, no default)"
@@ -64,6 +48,22 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift
 done
+
+# Check signing credentials after parsing so --help works without secrets.
+if [ -z "$KEY_PASSWORD" ]; then
+  echo "Error: KEY_PASSWORD environment variable must be set" >&2
+  exit 1
+fi
+
+if [ -z "$KEYSTORE_PASSWORD" ]; then
+  echo "Error: KEYSTORE_PASSWORD environment variable must be set" >&2
+  exit 1
+fi
+
+if [ -z "$KEY_ALIAS" ]; then
+  echo "Error: KEY_ALIAS environment variable must be set" >&2
+  exit 1
+fi
 
 # Set derived variables based on selected options
 APK_OUTPUT_DIR="./$MODULE/build/outputs/apk/$BUILD_TYPE"
@@ -108,7 +108,7 @@ for APK_PATH in $APK_PATHS; do
   RELEASE_NAME=$(basename "${APK_PATH/-unsigned/}")
   RELEASE_NAME="${RELEASE_NAME/app-/}"
   RELEASE_NAME="${RELEASE_NAME/$MODULE-/}"
-  SIGNED_APK_PATH="$SIGNED_APK_OUTPUT_DIR/SimpMusic-$BUILD_VARIANT$NAME_SUFFIX-$(basename "$RELEASE_NAME")"
+  SIGNED_APK_PATH="$SIGNED_APK_OUTPUT_DIR/UnX-Music-$BUILD_VARIANT$NAME_SUFFIX-$(basename "$RELEASE_NAME")"
 
   echo "[Step 4] Aligning the APK: $APK_PATH..."
   if [ ! -f "$ZIPALIGN" ]; then

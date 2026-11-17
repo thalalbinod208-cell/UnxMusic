@@ -1,19 +1,16 @@
-Not a simple music player, it's SimpMusic
+UnX Music is an open-source Android music app based on SimpMusic. Browse and play music using YouTube Music data, build your library, and listen with a player designed for Android.
 
-<br><b>Features:</b>
+<br><b>Highlights:</b>
 
-- Play music from YouTube Music or YouTube for free, without ads and in the background
-- Browsing Home, Charts, Podcast, Moods & Genre with YouTube Music data at high speed
-- Search everything on YouTube
-- Analyze your playing data, create custom playlists, and sync with YouTube Music...
-- Spotify Canvas supported
-- Play 1080p video option with subtitle
-- AI song suggestions
-- Notifications from followed artists
-- Caching and offline playback support
-- Synced lyrics from SimpMusic Lyrics, LRCLIB, Spotify (require login) and YouTube Transcript - AI lyrics translation (BETA) (\*)
-- Personalize data (\**) and multi-YouTube-account support
-- Supports SponsorBlock and Return YouTube Dislike
-- Sleep Timer
-- Android Auto with online content
-- And many more!
+- Browse music, charts, podcasts, moods, and genres
+- Search for songs, artists, albums, and videos
+- Play music in the background and control playback from Android media controls
+- Save favorites, organize playlists, and view listening history and analytics
+- Cache supported tracks for offline playback
+- View synced lyrics from available providers
+- Customize the app appearance and playback settings
+- Use Android Auto where supported
+
+UnX Music is an independent community distribution based on the open-source SimpMusic project. It is not affiliated with YouTube, Google, Spotify, Discord, or the upstream project maintainer. Online catalog access and some integrations depend on third-party services and may change or be unavailable.
+
+Source code, releases, support, and license information: https://github.com/thalalbinod208-cell/UnxMusic

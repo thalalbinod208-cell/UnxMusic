@@ -1,5 +1,5 @@
 name: Desktop app issue
-description: Report a problem specific to the Windows, macOS, or Linux desktop app
+description: Report a problem specific to the UnX Music desktop app
 labels: [ "bug:unconfirmed", "desktop" ]
 
 body:
@@ -22,7 +22,7 @@ body:
     id: latest_release
     attributes:
       label: Latest Release
-      description: Check the [Releases page](https://github.com/maxrave-dev/SimpMusic/releases) — this may already be fixed.
+      description: Check the [UnX Music releases](https://github.com/thalalbinod208-cell/UnxMusic/releases) — this may already be fixed.
       options:
         - label: I confirm I am on the latest release and the problem still happens.
           required: true
@@ -58,7 +58,7 @@ body:
     id: version
     attributes:
       label: App Version
-      placeholder: e.g. 2.1.0
+          placeholder: e.g. 2.6.27
     validations:
       required: true
 

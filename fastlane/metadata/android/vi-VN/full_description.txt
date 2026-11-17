@@ -1,19 +1,16 @@
-Không chỉ là ứng dụng nghe nhạc, nó là SimpMusic
+UnX Music là ứng dụng nghe nhạc Android mã nguồn mở dựa trên dự án SimpMusic. Khám phá và phát nhạc bằng dữ liệu YouTube Music, xây dựng thư viện cá nhân và nghe nhạc với trình phát dành cho Android.
 
-<br><b>Tính năng:</b>
+<br><b>Tính năng chính:</b>
 
-- Chơi nhạc từ YouTube Music hoặc YouTube miễn phí, không có quảng cáo và trong nền
-- Duyệt Trang chủ, Bảng xếp hạng, Podcast, Tâm trạng & Thể loại với dữ liệu YouTube Music tốc độ cao
-- Tìm kiếm mọi thứ trên YouTube
-- Phân tích dữ liệu chơi nhạc của bạn, tạo danh sách phát tùy chỉnh và đồng bộ với YouTube Music...
-- Spotify Canvas được hỗ trợ
-- Chơi video 1080p với phụ đề
-- Gợi ý bài hát AI
-- Thông báo từ các nghệ sĩ đã theo dõi
-- Hỗ trợ bộ nhớ đệm và phát lại ngoại tuyến
-- Lời bài hát đồng bộ từ SimpMusic Lyrics, LRCLIB, Spotify (yêu cầu đăng nhập) và YouTube Transcript - Dịch lời bài hát AI (BETA) (\*)
-- Dữ liệu cá nhân hóa (\**) và hỗ trợ nhiều tài khoản YouTube
-- Hỗ trợ SponsorBlock và Return YouTube Dislike
-- Hẹn giờ ngủ
-- Android Auto với nội dung trực tuyến
-- Và nhiều hơn nữa!
+- Duyệt nhạc, bảng xếp hạng, podcast, tâm trạng và thể loại
+- Tìm bài hát, nghệ sĩ, album và video
+- Phát nhạc nền và điều khiển bằng trình phát đa phương tiện của Android
+- Lưu bài yêu thích, sắp xếp danh sách phát và xem lịch sử cùng thống kê nghe nhạc
+- Lưu bộ nhớ đệm các bài hát được hỗ trợ để nghe ngoại tuyến
+- Xem lời bài hát đồng bộ từ các nhà cung cấp hiện có
+- Tùy chỉnh giao diện và cài đặt phát nhạc
+- Hỗ trợ Android Auto trên thiết bị tương thích
+
+UnX Music là bản phân phối cộng đồng độc lập dựa trên dự án mã nguồn mở SimpMusic. Ứng dụng không liên kết với YouTube, Google, Spotify, Discord hoặc người duy trì dự án gốc. Danh mục trực tuyến và một số tích hợp phụ thuộc vào dịch vụ bên thứ ba, nên có thể thay đổi hoặc không khả dụng.
+
+Mã nguồn, bản phát hành, hỗ trợ và giấy phép: https://github.com/thalalbinod208-cell/UnxMusic

@@ -1,17 +1,31 @@
 <div align="center">
-  <img src="assets/unx-music-banner.svg" alt="UnX Music — Android music app" width="100%" />
-
+  <img src="assets/brand/unx-music-app-icon.png" alt="UnX Music app icon" width="92" />
   <h1>UnX Music</h1>
-  <p><strong>Your music. Your space.</strong></p>
+  <p><strong>An Android music player shaped around the listening experience.</strong></p>
 
   [![Latest release](https://img.shields.io/github/v/release/thalalbinod208-cell/UnxMusic?display_name=tag&style=for-the-badge&color=167c91)](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest)
   [![License](https://img.shields.io/badge/License-GPL--3.0--or--later-5b7cfa?style=for-the-badge)](LICENSE)
   [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](#)
+  [![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](#)
 </div>
+
+<img src="assets/unx-music-banner.svg" alt="UnX Music audio player visual" width="100%" />
 
 ---
 
-UnX Music is an Android music app based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic). This repository contains the app source and release builds. Upstream attribution and original license notices are preserved.
+UnX Music is an Android music app based on [SimpMusic](https://github.com/maxrave-dev/SimpMusic). This repository contains the modified app source, release builds, project documentation, and support links. It is an independent community distribution and is not the upstream SimpMusic project.
+
+| Project | Details |
+| --- | --- |
+| App | UnX Music |
+| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · currently **2.6.27** |
+| Android application ID | `com.unx.muice` |
+| Android label | `UnX Music` |
+| Current version code | `90` |
+| Main stack | Kotlin · Android · Jetpack Compose · Media3 |
+| Source license | [GPL-3.0-or-later](LICENSE) |
+
+Online music data and playback rely on third-party services and may change independently of this app. See [Support](SUPPORT.md) for known limits and troubleshooting.
 
 ## Screenshots
 
@@ -22,6 +36,20 @@ UnX Music is an Android music app based on [SimpMusic](https://github.com/maxrav
     <td align="center" width="33%"><img src="assets/showcase/library-screen.jpg" alt="UnX Music library screen" width="100%" /><br /><strong>Library</strong></td>
   </tr>
 </table>
+
+Browse the [complete visual asset library](docs/ASSET_LIBRARY.md), including app icon explorations, feature boards, controls, and the supplied module diagram.
+
+## Feature visuals
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="assets/showcase/concepts/liquid-glass-player.png" alt="Liquid glass player visual reference" width="100%" /><br /><strong>Player visual</strong></td>
+    <td align="center" width="33%"><img src="assets/showcase/concepts/library-overview.png" alt="Library visual reference" width="100%" /><br /><strong>Library visual</strong></td>
+    <td align="center" width="33%"><img src="assets/showcase/concepts/analytics.png" alt="Analytics visual reference" width="100%" /><br /><strong>Analytics visual</strong></td>
+  </tr>
+</table>
+
+These feature boards are visual references; the [asset library](docs/ASSET_LIBRARY.md) distinguishes supplied concept artwork from the current app screenshots above.
 
 ## Get the app
 
@@ -35,16 +63,24 @@ Current release: **2.6.27** · Application ID: `com.unx.muice`
 
 ## Build from source
 
-Open the project in Android Studio, or run `./gradlew :androidApp:assembleRelease` with a compatible JDK and Android SDK. Release signing keys and local machine configuration are intentionally not stored in this repository.
+See [BUILDING.md](BUILDING.md) for the verified Android build setup, FOSS build command, output location, and release-signing notes. Never commit signing keys or local service credentials. GitHub Actions runs a no-secrets APK build validation on pushes and pull requests to `main`.
+
+## Contribute and get support
+
+- Read [contribution guidelines](CONTRIBUTING.md) before opening a pull request.
+- For app help or a bug report, use [GitHub Issues](https://github.com/thalalbinod208-cell/UnxMusic/issues/new/choose) or read [Support](SUPPORT.md).
+- Report security concerns using the steps in [SECURITY.md](SECURITY.md).
+- For project updates, see [GitHub Releases](https://github.com/thalalbinod208-cell/UnxMusic/releases).
 
 ## Credits and licenses
 
-This is a modified distribution of SimpMusic. Keep upstream attribution and the original GPL terms when redistributing.
+This is a modified distribution based on SimpMusic. Keep upstream attribution and the original GPL terms when redistributing. Historical upstream changelog entries and internal service names may still say “SimpMusic”; they identify upstream work/services and are intentionally not rewritten as UnX Music history.
 
 - [GPL-3.0-or-later license](LICENSE)
 - [Original upstream README](UPSTREAM_README.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 - [Third-party license texts](LICENSES/)
+- [Visual asset notes and attribution](docs/ATTRIBUTION.md)
 
 ## Links
 
