@@ -21,7 +21,7 @@ The APKs are written under `androidApp/build/outputs/apk/release/`. The release 
 
 ## Build a signed release
 
-Signed builds require a release keystore and credentials owned by the release maintainer. Keep the keystore outside version control and provide the required values through protected environment variables as documented by `./build_and_sign_apk.sh --help`. Set `KEYSTORE_PATH` if your keystore is not named `unx-music-release.jks` in the repository root. The helper prefixes signed APKs with `UnX-Music`; verify the APK application ID, version, signature, and checksum before publishing. Never publish credentials or keystore files.
+Signed builds require a release keystore and credentials owned by the release maintainer. Keep the keystore outside version control and provide the required values through protected environment variables as documented by `./build_and_sign_apk.sh --help`. The release workflow writes its protected keystore to `unx-music-release.jks`; set `KEYSTORE_PATH` for a different local path. The helper prefixes signed APKs with `UnX-Music`; verify the APK application ID, version, signature, and checksum before publishing. Never publish credentials or keystore files.
 
 ## Build validation
 
