@@ -18,7 +18,7 @@
 | Project | Details |
 | --- | --- |
 | App | UnX Music |
-| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.29** |
+| Current release | [Latest GitHub release](https://github.com/thalalbinod208-cell/UnxMusic/releases/latest) · **2.6.30** |
 | Android application ID | `com.unx.muice` |
 | Android label | `UnX Music` |
 | Current version code | `92` |

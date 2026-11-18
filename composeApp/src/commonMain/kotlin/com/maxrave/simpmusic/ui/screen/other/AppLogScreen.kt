@@ -3,6 +3,7 @@ package com.maxrave.simpmusic.ui.screen.other
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -238,18 +239,25 @@ fun AppLogScreen(
         val wide = maxWidth >= 840.dp
         Column(Modifier.fillMaxSize()) {
             CenterAlignedTopAppBar(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                 title = {
                     Text(
                         textAlign = TextAlign.Center,
                         text = stringResource(Res.string.app_log),
-                        style = typo().titleMedium,
+                        style = typo().titleLarge,
+                        color = onSurface,
                     )
                 },
                 navigationIcon = {
-                    Box(Modifier.padding(horizontal = 5.dp)) {
+                    Box(
+                        Modifier
+                            .size(42.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                    ) {
                         RippleIconButton(
                             SimpIcons.ArrowBackIosNew,
-                            Modifier.size(32.dp),
+                            Modifier.size(42.dp),
                             true,
                             tint = onSurface,
                         ) {
@@ -257,7 +265,15 @@ fun AppLogScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                actions = { Spacer(Modifier.size(42.dp)) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent,
+                        navigationIconContentColor = onSurface,
+                        titleContentColor = onSurface,
+                        actionIconContentColor = onSurface,
+                    ),
             )
             LogTabs(
                 selected = tab,
@@ -545,12 +561,17 @@ private fun LevelChips(
     selected: Char,
     onSelect: (Char) -> Unit,
 ) {
-    listOf(
-        'I' to stringResource(Res.string.log_level_info),
-        'W' to stringResource(Res.string.log_level_warn),
-        'E' to stringResource(Res.string.error),
-    ).forEach { (level, label) ->
-        Chip(isSelected = selected == level, text = label) { onSelect(level) }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        listOf(
+            'I' to stringResource(Res.string.log_level_info),
+            'W' to stringResource(Res.string.log_level_warn),
+            'E' to stringResource(Res.string.error),
+        ).forEach { (level, label) ->
+            Chip(isSelected = selected == level, text = label) { onSelect(level) }
+        }
     }
 }
 
