@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -109,13 +111,33 @@ fun CreditScreen(
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         ) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("About Unx Music", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("About UnX Music", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
                 Text(
-                    text = "Unx Music is a modern music browsing and playback application designed to provide users with a convenient and enjoyable music experience.\n\nThe application is maintained and developed by Binod Thalal under the Unx Music brand.\n\nOur goal is to deliver a clean, user-friendly and reliable music experience with a focus on simplicity, performance and accessibility.",
+                    text = "Music, shaped around you.",
+                    style = typo().headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = "Discover music, manage your library, and shape a listening experience that feels like yours. UnX Music is created and maintained by Binod Thalal.",
                     style = typo().bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("Discover", "Your library", "Playback").forEach { label ->
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        ) {
+                            Text(
+                                text = label,
+                                style = typo().labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -125,9 +147,9 @@ fun CreditScreen(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         ) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Company and support", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
-                Text("Unx Music · Binod Thalal", style = typo().bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("Company: Unx Music", style = typo().bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Developer and support", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                Text("UnX Music · Binod Thalal", style = typo().bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Brand: UnX Music", style = typo().bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("Developer: Binod Thalal", style = typo().bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("Support email  ·  hii.binodthalal@gmail.com", style = typo().bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.fillMaxWidth().clickable { openUrl("mailto:hii.binodthalal@gmail.com") })
                 Text("Phone  ·  +977 9768914027", style = typo().bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.fillMaxWidth().clickable { openUrl("tel:+9779768914027") })
@@ -143,7 +165,7 @@ fun CreditScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
             ) {
                 Column(Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
-                    Text("Legal and open-source notices", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                    Text("License and acknowledgements", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
                     Spacer(Modifier.height(8.dp))
                     Markdown(
                         disclaimer,
@@ -162,7 +184,7 @@ fun CreditScreen(
         }
 
         Text(
-            text = "Unx Music · modified open-source derivative · GPL-3.0",
+            text = "UnX Music · GPL-3.0-or-later",
             style = typo().bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),

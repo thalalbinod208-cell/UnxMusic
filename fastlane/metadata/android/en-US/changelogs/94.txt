@@ -1,0 +1,1 @@
+YouTube account profile details now appear in Settings and the Home profile menu. You can log out from either place. The YouTube login warning has a refreshed, centered layout.

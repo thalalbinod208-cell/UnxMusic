@@ -41,6 +41,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -421,7 +422,6 @@ import simpmusic.composeapp.generated.resources.send_back_listening_data_to_goog
 import simpmusic.composeapp.generated.resources.set
 import simpmusic.composeapp.generated.resources.settings
 import simpmusic.composeapp.generated.resources.settings_quick_access
-import simpmusic.composeapp.generated.resources.settings_subtitle
 import simpmusic.composeapp.generated.resources.search_settings
 import simpmusic.composeapp.generated.resources.search_settings_hint
 import simpmusic.composeapp.generated.resources.clear_search
@@ -506,6 +506,13 @@ fun SettingScreen(
             byUnicodePattern("yyyyMMddHHmmss")
         }
     val appName = stringResource(Res.string.app_name)
+    val loggedIn by viewModel.loggedIn.collectAsStateWithLifecycle()
+    val googleAccounts by viewModel.googleAccounts.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.getAllGoogleAccount()
+    }
+    val linkedYouTubeAccount =
+        if (loggedIn == TRUE) googleAccounts.data?.firstOrNull { it.isUsed } ?: googleAccounts.data?.firstOrNull() else null
 
     val backupLauncher =
         fileSaverResult(
@@ -615,7 +622,6 @@ fun SettingScreen(
     val japaneseDictionaryState by viewModel.japaneseDictionaryState.collectAsStateWithLifecycle()
     var showColorPickerDialog by rememberSaveable { mutableStateOf(false) }
     val discordLoggedIn by viewModel.discordLoggedIn.collectAsStateWithLifecycle()
-    val loggedIn by viewModel.loggedIn.collectAsStateWithLifecycle()
     val syncFollowToYouTube by viewModel.syncFollowToYouTube.collectAsStateWithLifecycle()
     val equalizerEnabled by viewModel.equalizerEnabled.collectAsStateWithLifecycle()
     val equalizerType by viewModel.equalizerType.collectAsStateWithLifecycle()
@@ -742,9 +748,19 @@ fun SettingScreen(
                 )
                 SettingsQuickAccess(
                     selectedIndex = settingListState.firstVisibleItemIndex,
-                    appName = appName,
+                    accountName = linkedYouTubeAccount?.name,
+                    accountEmail = linkedYouTubeAccount?.email,
+                    accountPhotoUrl = linkedYouTubeAccount?.thumbnailUrl,
                     searchQuery = settingsSearchQuery,
                     onSearchQueryChange = { settingsSearchQuery = it },
+                    onAccountClick = {
+                        if (linkedYouTubeAccount == null) {
+                            navController.navigate(LoginDestination)
+                        } else {
+                            viewModel.getAllGoogleAccount()
+                            showYouTubeAccountDialog = true
+                        }
+                    },
                     onSelect = { targetIndex ->
                         settingsSearchQuery = ""
                         coroutineScope.launch { settingListState.animateScrollToItem(targetIndex) }
@@ -2883,7 +2899,33 @@ fun SettingScreen(
             }
         }
         item(key = "end") {
-            EndOfPage(height = 24.dp)
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                if (linkedYouTubeAccount != null) {
+                    Button(
+                        onClick = {
+                            viewModel.setBasicAlertData(
+                                SettingBasicAlertState(
+                                    title = runBlocking { getString(Res.string.warning) },
+                                    message = runBlocking { getString(Res.string.log_out_warning) },
+                                    confirm = runBlocking { getString(Res.string.log_out) } to {
+                                        viewModel.logOutAllYouTube()
+                                    },
+                                    dismiss = runBlocking { getString(Res.string.cancel) },
+                                ),
+                            )
+                        },
+                        shape = RoundedCornerShape(28.dp),
+                    ) {
+                        Icon(SimpIcons.Close, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Log out of YouTube Music")
+                    }
+                }
+                EndOfPage(height = 24.dp)
+            }
         }
     }
     VerticalScrollBar(
@@ -3577,9 +3619,12 @@ fun SettingScreen(
 @Composable
 private fun SettingsQuickAccess(
     selectedIndex: Int,
-    appName: String,
+    accountName: String?,
+    accountEmail: String?,
+    accountPhotoUrl: String?,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
+    onAccountClick: () -> Unit,
     onSelect: (Int) -> Unit,
 ) {
     val isAndroid = getPlatform() == Platform.Android
@@ -3609,7 +3654,7 @@ private fun SettingsQuickAccess(
         }
     Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable(onClick = onAccountClick),
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             tonalElevation = 2.dp,
@@ -3619,27 +3664,38 @@ private fun SettingsQuickAccess(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    modifier = Modifier.size(48.dp),
+                Box(
+                    modifier = Modifier.size(72.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = SimpIcons.Settings,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(25.dp),
+                    if (!accountPhotoUrl.isNullOrBlank()) {
+                        AsyncImage(
+                            model = accountPhotoUrl,
+                            contentDescription = "Account profile photo",
+                            modifier = Modifier.fillMaxSize().clip(CircleShape),
+                        )
+                    } else {
+                        Text(
+                            text = accountName?.firstOrNull()?.uppercase() ?: "U",
+                            style = typo().headlineLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = appName, style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "YouTube Music Account", style = typo().titleMedium, color = MaterialTheme.colorScheme.onSurface)
                     Spacer(Modifier.height(3.dp))
                     Text(
-                        text = stringResource(Res.string.settings_subtitle),
+                        text = accountName ?: "Not connected",
+                        style = typo().bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                    )
+                    Text(
+                        text = accountEmail ?: "Connect your YouTube account to view profile details",
                         style = typo().bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
                     )
                 }
             }

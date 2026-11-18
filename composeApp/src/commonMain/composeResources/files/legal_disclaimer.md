@@ -13,7 +13,7 @@ Unx Music is an independent app and is not affiliated with or endorsed by Google
 
 ## Third-party software and license
 
-Unx Music is a modified derivative of **SimpMusic**, originally created by **Tuan Minh Nguyen Duc (maxrave-dev)**. The original project and its copyright notices are acknowledged here. This derivative contains software licensed under **GNU General Public License version 3.0 (GPL-3.0)**; the included `LICENSE` file contains the license text. When distributing this app, the corresponding source and license notices must be provided as required by GPL-3.0.
+UnX Music includes software from **SimpMusic**, originally created by **Tuan Minh Nguyen Duc (maxrave-dev)**. The original project and its copyright notices are acknowledged here. Applicable parts of this app are licensed under the **GNU General Public License, version 3.0 or later (GPL-3.0-or-later)**; the included `LICENSE` file contains the license text. When distributing this app, provide the corresponding source and license notices as required by the license.
 
 Third-party libraries retain their own licenses; see **Third party libraries** in Settings for their notices.
 

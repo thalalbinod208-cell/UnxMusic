@@ -91,6 +91,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
@@ -169,6 +170,7 @@ import com.maxrave.simpmusic.ui.component.ShareSavedLyricsDialog
 import com.maxrave.simpmusic.ui.component.homeCardAspectRatio
 import com.maxrave.simpmusic.ui.component.rememberHolderPainter
 import com.maxrave.simpmusic.ui.icon.Notifications
+import com.maxrave.simpmusic.ui.icon.LogoDev
 import com.maxrave.simpmusic.ui.icon.Person
 import com.maxrave.simpmusic.ui.icon.SimpIcons
 import com.maxrave.simpmusic.ui.navigation.destination.home.HomeDestination
@@ -190,6 +192,7 @@ import com.maxrave.simpmusic.utils.eligiblePromos
 import com.maxrave.simpmusic.utils.osRequirementOf
 import com.maxrave.simpmusic.viewModel.FOOTGUNS_STAR_KEY
 import com.maxrave.simpmusic.viewModel.HomeViewModel
+import com.maxrave.simpmusic.viewModel.SettingsViewModel
 import com.maxrave.simpmusic.viewModel.HomeViewModel.Companion.HOME_PARAMS_COMMUTE
 import com.maxrave.simpmusic.viewModel.HomeViewModel.Companion.HOME_PARAMS_ENERGIZE
 import com.maxrave.simpmusic.viewModel.HomeViewModel.Companion.HOME_PARAMS_FEEL_GOOD
@@ -234,6 +237,8 @@ import simpmusic.composeapp.generated.resources.guest
 import simpmusic.composeapp.generated.resources.let_s_pick_a_playlist_for_you
 import simpmusic.composeapp.generated.resources.log_in_to_YouTube
 import simpmusic.composeapp.generated.resources.log_in_warning
+import simpmusic.composeapp.generated.resources.log_out
+import simpmusic.composeapp.generated.resources.log_out_warning
 import simpmusic.composeapp.generated.resources.mood
 import simpmusic.composeapp.generated.resources.notification
 import simpmusic.composeapp.generated.resources.party
@@ -705,21 +710,39 @@ fun HomeScreen(
             mutableStateOf(false)
         }
         AlertDialog(
+            icon = {
+                Box(
+                    modifier = Modifier.size(64.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = SimpIcons.LogoDev,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(36.dp),
+                    )
+                }
+            },
             title = {
-                Text(stringResource(Res.string.warning))
+                Text(stringResource(Res.string.warning), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             },
             text = {
-                Column {
-                    Text(text = stringResource(Res.string.log_in_warning))
-                    Spacer(modifier = Modifier.height(4.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(Res.string.log_in_warning),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
                         modifier =
                             Modifier
                                 .clip(RoundedCornerShape(8.dp))
                                 .clickable {
                                     doNotShowAgain = !doNotShowAgain
-                                }.fillMaxWidth(),
+                                }.fillMaxWidth().padding(vertical = 2.dp),
                     ) {
                         Checkbox(
                             checked = doNotShowAgain,
@@ -1255,8 +1278,16 @@ private fun HomeAccountButton(
     navController: NavController,
 ) {
     var menuOpen by remember { mutableStateOf(false) }
+    var showLogoutConfirmation by remember { mutableStateOf(false) }
     // Sign-out blanks the stored account name, so a blank name is the signed-out state.
     val signedIn = !accountName.isNullOrBlank()
+    val settingsViewModel: SettingsViewModel = koinViewModel()
+    val googleAccounts by settingsViewModel.googleAccounts.collectAsStateWithLifecycle()
+    val youtubeAccount =
+        if (signedIn) googleAccounts.data?.firstOrNull { it.isUsed } ?: googleAccounts.data?.firstOrNull() else null
+    LaunchedEffect(menuOpen) {
+        if (menuOpen) settingsViewModel.getAllGoogleAccount()
+    }
     val displayName = if (signedIn) accountName.orEmpty() else stringResource(Res.string.guest)
     val hour = remember { now().time.hour }
     val greeting =
@@ -1300,52 +1331,79 @@ private fun HomeAccountButton(
                 Column(
                     modifier =
                         Modifier
-                            .widthIn(max = 280.dp)
+                            .widthIn(max = 320.dp)
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainer),
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                            .padding(horizontal = 18.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        AccountAvatar(
-                            signedIn = signedIn,
-                            thumbnailUrl = thumbnailUrl,
-                            size = 40.dp,
-                            contentDescription = null,
-                        )
-                        Column {
-                            Text(text = displayName, style = typo().titleSmall, maxLines = 1)
-                            Text(text = greeting, style = typo().bodySmall)
-                        }
-                    }
-                    DropdownMenuItem(
-                        text = { Text(stringResource(Res.string.notification), style = typo().bodyMedium) },
-                        leadingIcon = { Icon(SimpIcons.Notifications, contentDescription = null) },
-                        onClick = {
-                            menuOpen = false
-                            navController.navigate(NotificationDestination)
-                        },
+                    AccountAvatar(signedIn, thumbnailUrl, 68.dp, displayName)
+                    Spacer(Modifier.height(10.dp))
+                    Text(text = displayName, style = typo().titleMedium, textAlign = TextAlign.Center, maxLines = 1)
+                    Text(
+                        text = youtubeAccount?.email ?: if (signedIn) "YouTube Music account" else greeting,
+                        style = typo().bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
                     )
-                    if (!signedIn) {
+                    Text(
+                        text = if (signedIn) "YouTube Music account" else "Not connected",
+                        style = typo().bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 3.dp, bottom = 12.dp),
+                    )
+                    if (signedIn) {
+                        Button(
+                            onClick = { showLogoutConfirmation = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(24.dp),
+                        ) {
+                            Text(stringResource(Res.string.log_out), textAlign = TextAlign.Center)
+                        }
+                    } else {
                         Button(
                             onClick = {
                                 menuOpen = false
                                 navController.navigate(LoginDestination)
                             },
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(24.dp),
                         ) {
-                            Text(stringResource(Res.string.log_in_to_YouTube), color = LocalContentColor.current)
+                            Text(stringResource(Res.string.log_in_to_YouTube), textAlign = TextAlign.Center)
                         }
                     }
+                    DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.notification), style = typo().bodyMedium) },
+                        leadingIcon = { Icon(SimpIcons.Notifications, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            menuOpen = false
+                            navController.navigate(NotificationDestination)
+                        },
+                    )
                 }
             }
         }
+    }
+    if (showLogoutConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showLogoutConfirmation = false },
+            title = { Text(stringResource(Res.string.warning), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
+            text = { Text(stringResource(Res.string.log_out_warning), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
+            confirmButton = {
+                TextButton(onClick = {
+                    settingsViewModel.logOutAllYouTube()
+                    showLogoutConfirmation = false
+                    menuOpen = false
+                }) { Text(stringResource(Res.string.log_out)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutConfirmation = false }) { Text(stringResource(Res.string.cancel)) }
+            },
+        )
     }
 }
 

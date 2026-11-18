@@ -21,7 +21,7 @@ On Android/Termux, run Gradle through the Android development container (`adev '
 
 ## Build a signed release
 
-Signed builds require the original release keystore and credentials owned by the release maintainer. Keep the keystore outside version control and provide the required values through protected environment variables as documented by `./build_and_sign_apk.sh --help`. Set `KEYSTORE_PATH` to the keystore path. The helper prefixes signed APKs with `UnX-Music`; verify the APK application ID, version, signature, and checksum before publishing. Never publish credentials or keystore files. Without the original keystore, a new APK cannot update an existing installation signed by that key.
+Signed builds require both the release keystore and the previous Android signing key so upgrades continue to work on older Android versions. On the maintainer's Termux setup, `build_release_termux.sh` loads credentials from `~/.config/unxmusic/release.env` (mode `0600`), builds the arm64 release, signs it with the checked-in public signing lineage, and verifies the result. Keep the keystores and credential file out of version control. Never publish passwords or private keystores. Without these keys, a new APK cannot update existing installations.
 
 ## Build and publish policy
 
